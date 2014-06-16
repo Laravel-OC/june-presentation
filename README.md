@@ -22,7 +22,22 @@ Possible topic ideas
 
 - Comparing two dates
 
-- Doing template inheritance (i.e. not repeating `<!DOCTYPE>`)
+```php
+// regular PHP
+$then = new DateTime("july 4th, 2014");
+$now  = new DateTime();
+
+$diff = $then->diff($now, true);
+
+echo $diff->format("%y years, %m months, %d days");
+```
+
+```php
+// laravel
+echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
+```
+
+- Doing template inheritance (i.e. not repeating `<!DOCTYPE>`, `<head>`, etc.)
 
 - Simple routing
 
