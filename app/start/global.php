@@ -79,3 +79,23 @@ App::down(function()
 */
 
 require app_path().'/filters.php';
+
+/*
+|--------------------------------------------------------------------------
+| Setup the Response macros
+|--------------------------------------------------------------------------
+|
+| Finally we'll setup any custom Response macros, like a Markdown one
+|
+*/
+Response::macro('markdown', function ($name, array $data = []) {
+    $view = View::make($name, $data);
+
+    $rendered = $view->render(function ($view, $contents) {
+        $instance = new ParsedownExtra();
+
+        return $instance->text($contents);
+    });
+
+    return Response::make($rendered);
+});
