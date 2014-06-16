@@ -2,6 +2,5 @@
 /vendor
 /bin
 composer.phar
-composer.lock
 .env.*.php
 .env.php
