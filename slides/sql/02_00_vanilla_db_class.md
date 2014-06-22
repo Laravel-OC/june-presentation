@@ -5,11 +5,13 @@ class BaseRepo
 {
     private $conn;
 
-    public function __construct(PDO $conn) { $this->conn = $conn; }
+    public function __construct(PDO $conn) {
+        $this->conn = $conn;
+    }
 
     //TODO: error checking
     //TODO: fetch style
-    //TODO: normalize results (ints, strings, datetimes, etc.)
+    //TODO: cast results to appropriate data types
     public function fetchByQuery($query)
     {
         $stmt = $this->conn->prepare($query);

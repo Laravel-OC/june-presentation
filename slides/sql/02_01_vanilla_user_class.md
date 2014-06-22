@@ -8,12 +8,16 @@ class UserRepo extends BaseRepo
     public function findByPk($key)
     {
         return $this->fetchByQuery(
-            "SELECT * FROM user WHERE id = " . intval($key));
+            "SELECT * FROM user
+                WHERE id = " . intval($key)
+        );
     }
 
     public function findAll()
     {
-        return $this->fetchByQuery("SELECT * FROM user");
+        return $this->fetchByQuery(
+            "SELECT * FROM user"
+        );
     }
 }
 ```
