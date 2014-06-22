@@ -11,6 +11,4 @@
 |
 */
 
-Route::get("/", function () {
-    return Response::markdown("present");
-});
+Route::get("/", "LaravelOC\SlideController@showSlides");
