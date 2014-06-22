@@ -15,3 +15,8 @@ serve:
 	php artisan serve
 
 develop: concat serve
+
+snapshot:
+	./snapshot.bash
+	cd ./dist && git add --all . && git commit -am "rebuilding presentation" && git push
+
