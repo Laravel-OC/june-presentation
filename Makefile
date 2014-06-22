@@ -1,3 +1,6 @@
+JS_DIST=public/js/dist.js
+CSS_DIST=public/css/dist.css
+
 concat:
 	@echo concatenating assets
 	php build.php
@@ -18,7 +21,8 @@ develop: concat serve
 
 snapshot: clean concat
 	php artisan snapshot GET / > dist/index.html
-	for file in ${DIST_ASSETS}; do cp $$file dist/$${file#public/}; done
+	cp ${JS_DIST} dist/js/
+	cp ${CSS_DIST} dist/css/
 	cd ./dist && git add --all . && git commit -am "rebuilding presentation" && git push
 
 .PHONY: clean serve ctags concat develop snapshot
