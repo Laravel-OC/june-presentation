@@ -1,0 +1,4 @@
+[submodule "dist"]
+	path = dist
+	url = git@github.com:Laravel-OC/june-presentation.git
+	branch = gh-pages
