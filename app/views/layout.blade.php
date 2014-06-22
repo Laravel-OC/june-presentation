@@ -10,7 +10,6 @@
         <!-- deck.js has a lot of dependencies -->
         <link rel="stylesheet" media="screen" href="css/vendor/deck.core.css">
         <link rel="stylesheet" media="screen" href="css/vendor/deck.status.css">
-        <link rel="stylesheet" media="screen" href="css/vendor/deck.scale.css">
         <link rel="stylesheet" media="screen" href="css/vendor/swiss.css">
         <link rel="stylesheet" media="screen" href="css/vendor/vertical-slide.css">
         <link rel="stylesheet" media="print" href="css/vendor/print.css">
@@ -39,8 +38,7 @@
 
         <script src="js/vendor/deck.core.js"></script>
         <script src="js/vendor/deck.status.js"></script>
-        <script src="js/vendor/deck.scale.js"></script>
-            <!-- errything else -->
+        <!-- errything else -->
         <script src="js/app.js"></script>
     </body>
 </html>
