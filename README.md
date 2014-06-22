@@ -5,8 +5,8 @@ june-presentation
 Getting started
 ---------------
 ```bash
-composer install
-php artisan serve
+composer install  # to install dependencies
+make develop      # to concat assets and start the server
 ```
 
 How this works
@@ -35,7 +35,6 @@ rendered:
 
 Tips
 ----
-
 ### Nested slides
 
 That cool gradually rendering trick for lists or whatever is accomplished via
@@ -58,6 +57,11 @@ PHP's glob function kind of orders the slides. For now the easiest way to handle
 this is just to prefix each of your files with a number (e.g. `00_intro.md`) and
 control the order that way. I'm hesitant to add anything more complex like an
 index file or a manifest, but if anyone thinks it's important I'll consider it.
+
+### Assets
+
+Assets are concatenated by a super ghetto script, `build.php`, in the root
+folder.
 
 Possible topic ideas
 --------------------

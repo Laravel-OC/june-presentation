@@ -5,3 +5,5 @@ composer.phar
 .env.*.php
 .env.php
 /tags
+/public/css/dist.css
+/public/js/dist.js
