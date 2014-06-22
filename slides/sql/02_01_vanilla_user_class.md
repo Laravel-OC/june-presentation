@@ -1,6 +1,5 @@
 The vanilla PHP way (cont'd)
 ----------------------------
-
 ```php
 <?php
 

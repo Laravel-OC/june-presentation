@@ -1,5 +1,5 @@
-The Laravel Way
----------------
+The Laravel way (cont'd)
+------------------------
 ```php
 <?php
 

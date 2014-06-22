@@ -1,4 +1,4 @@
-The Laravel Way
+The Laravel way
 ---------------
 ```php
 <?php // laravel
