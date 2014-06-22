@@ -34,6 +34,7 @@ $js_files_to_concatenate = [
     $vendorjs("prism.js"),
     $vendorjs("deck.core.js"),
     $vendorjs("deck.status.js"),
+    $vendorjs("deck.scale.js"),
     $jsfile("app.js"),
 ];
 
@@ -42,6 +43,7 @@ file_put_contents($jsfile("dist.js"), $concat($js_files_to_concatenate, ";"));
 $css_files_to_concatenate = [
     $vendorcss("deck.core.css"),
     $vendorcss("deck.status.css"),
+    $vendorcss("deck.scale.css"),
     $vendorcss("swiss.css"),
     $vendorcss("vertical-slide.css"),
     $vendorcss("print.css"),
