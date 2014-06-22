@@ -9,17 +9,61 @@ composer install
 php artisan serve
 ```
 
-Cool things
------------
-```php
-Response::markdown("viewname", ["data" => "goes here"]);
+How this works
+--------------
+Once the PHP server is running you can visit [localhost:8000][localhost] and the
+current presentation should show up. Internally here's how that page gets
+rendered:
+
+1. The request goes to `showSlides` method on the `SlideController` (in the
+   `src` directory)
+
+2. The `SlideController` gets a glob of all `.md` or `.html` files within the
+   `/slides` directory. So `/slides/topic/foo.md` is included but
+   `/slides/bar.md` is not
+
+3. If the slide is an HTML file, it just gets the contents of it. If the slide
+   is Markdown (.md) file it renders it through Parsedown first
+
+4. The slides each get rendered inside an article tag with a class of `.slide`
+
+5. [`deck.js`][deckjs] takes those slides and, with the help of some included
+   CSS and other JS (a lot of other JS, actually) turns them into a presentation
+
+[localhost]: http://localhost:8000
+[deckjs]: http://imakewebthings.com/deck.js/
+
+Tips
+----
+
+### Nested slides
+
+That cool gradually rendering trick for lists or whatever is accomplished via
+nested slides. Simply create a `.html` file and do something like this:
+
+```html
+<h2>Tagline</h2>
+<ul>
+    <li class="slide"><h4>First list item</h4></li>
+    <li class="slide"><h4>Second list item</h4></li>
+    <li class="slide"><h4>The h4s are optional</h4></li>
+</ul>
 ```
+
+The important part here is not the `ul`, but the `.slide` class.
+
+### Ordering
+
+PHP's glob function kind of orders the slides. For now the easiest way to handle
+this is just to prefix each of your files with a number (e.g. `00_intro.md`) and
+control the order that way. I'm hesitant to add anything more complex like an
+index file or a manifest, but if anyone thinks it's important I'll consider it.
 
 Possible topic ideas
 --------------------
-- Constructing a SQL query w/ joins
+- [x] Constructing a SQL query w/ joins
 
-- Comparing two dates
+- [ ] Comparing two dates
 
 ```php
 // regular PHP
@@ -36,44 +80,44 @@ echo $diff->format("%y years, %m months, %d days");
 echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
 ```
 
-- Doing template inheritance (i.e. not repeating `<!DOCTYPE>`, `<head>`, etc.)
+- [ ] Doing template inheritance (i.e. not repeating `<!DOCTYPE>`, `<head>`, etc.)
 
-- Simple routing
+- [ ] Simple routing
 
-- Loading files and classes automatically
+- [ ] Loading files and classes automatically
 
-- "Pretty" urls (without `.php`, GET params w/out `?`, etc.)
+- [ ] "Pretty" urls (without `.php`, GET params w/out `?`, etc.)
 
-- (Reversible) database migrations
+- [ ] (Reversible) database migrations
 
-- Functional testing (simulating HTTP requests)
+- [ ] Functional testing (simulating HTTP requests)
 
-- Simple CRUD for simple models
+- [ ] Simple CRUD for simple models
 
-- JSON responses (headers too)
+- [ ] JSON responses (headers too)
 
-- Redirecting
+- [ ] Redirecting
 
-- CSRF tokens
+- [ ] CSRF tokens
 
-- Authentication (password hashing, encryption)
+- [ ] Authentication (password hashing, encryption)
 
-- Deployment process
+- [ ] Deployment process
 
-- Repeatable environments (Vagrant)
+- [ ] Repeatable environments (Vagrant)
 
-- Debug mode
+- [ ] Debug mode
 
-- i8n
+- [ ] i8n
 
-- Logging
+- [ ] Logging
 
-- Email
+- [ ] Email
 
-- Queues
+- [ ] Queues
 
-- Making CURL requests
+- [ ] Making CURL requests
 
-- Maintenance mode
+- [ ] Maintenance mode
 
-- Error handling
+- [ ] Error handling
