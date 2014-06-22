@@ -88,7 +88,7 @@ echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
 
 - [ ] "Pretty" urls (without `.php`, GET params w/out `?`, etc.)
 
-- [ ] (Reversible) database migrations
+- [ ] Database migrations (reversable)
 
 - [ ] Functional testing (simulating HTTP requests)
 
