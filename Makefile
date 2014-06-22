@@ -6,7 +6,7 @@ clean:
 	@echo cleaning old assets
 	rm -f public/css/dist.css public/js/dist.js
 
-ctags:
+tags:
 	@echo generating ctags
 	find . -name '*.php' -exec ctags {} +
 
@@ -16,7 +16,10 @@ serve:
 
 develop: concat serve
 
-snapshot:
-	./snapshot.bash
+snapshot: clean concat
+	php artisan snapshot GET / > dist/index.html
+	for file in ${DIST_ASSETS}; do cp $$file dist/$${file#public/}; done
 	cd ./dist && git add --all . && git commit -am "rebuilding presentation" && git push
+
+.PHONY: clean serve ctags concat develop snapshot
 
