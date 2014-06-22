@@ -1,7 +1,6 @@
 june-presentation
 =================
-
-One of our presentations, June Edition™
+>One of our presentations, June Edition™
 
 Getting started
 ---------------
