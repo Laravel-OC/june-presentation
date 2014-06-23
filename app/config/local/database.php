@@ -17,15 +17,16 @@ return array(
     | choice installed on your machine before you begin development.
     |
     */
+	'default' => $_ENV["DATABASE_TYPE"],
 
     'connections' => array(
 
         'mysql' => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
-            'database'  => 'homestead',
-            'username'  => 'homestead',
-            'password'  => 'secret',
+            'database'  => $_ENV['DATABASE_NAME'],
+            'username'  => $_ENV['DATABASE_USER'],
+            'password'  => $_ENV['DATABASE_PASSWORD'],
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',

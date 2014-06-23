@@ -55,7 +55,7 @@ return array(
         'mysql' => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
-            'database'  => array_get($_ENV, "DATABASE_NAME", "june_presentation"),
+            'database'  => array_get($_ENV, "DATABASE_NAME", "laravel_presentation"),
             'username'  => array_get($_ENV, "DATABASE_USER", "root"),
             'password'  => array_get($_ENV, "DATABASE_PASS", "klvtz"),
             'charset'   => 'utf8',
