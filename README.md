@@ -154,12 +154,6 @@ echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
 
 - [ ] Error handling
 
-Brain dump
-----------
-"Things to think about" is a stupid title if you don't end up talking about
-them. What does SQL injection mean in this context? What benefits does Laravel
-provide over its alternatives?
-
 Author Blurbs
 -------------
 The PHP world has been rocked by an explosion of new frameworks, best practices,
