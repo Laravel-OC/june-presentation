@@ -17,16 +17,16 @@ return array(
     | choice installed on your machine before you begin development.
     |
     */
-	'default' => $_ENV["DATABASE_TYPE"],
+    'default' => array_get($_ENV, "DATABASE_TYPE", "sqlite"),
 
     'connections' => array(
 
         'mysql' => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
-            'database'  => $_ENV['DATABASE_NAME'],
-            'username'  => $_ENV['DATABASE_USER'],
-            'password'  => $_ENV['DATABASE_PASSWORD'],
+            'database'  => array_get($_ENV, "DATABASE_NAME"),
+            'username'  => array_get($_ENV, "DATABASE_USER"),
+            'password'  => array_get($_ENV, "DATABASE_PASS"),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
