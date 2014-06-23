@@ -67,15 +67,16 @@ Possible topic ideas
 --------------------
 - [x] Constructing a SQL query w/ joins => *tested*
 
-To join is lterally join two table selections together for one query
-Such a selection could lead to redundancy as every permutation is given.
-However, joining tables based on a condition allows us to specify a complex selection
+To join is literally join two table selections together for one query Such a
+selection could lead to redundancy as every permutation is given.  However,
+joining tables based on a condition allows us to specify a complex selection
+
 ```sql
 SELECT
     first_name,
     last_name,
     project_name,
-	due_date 
+    due_date
 FROM developers
 INNER JOIN projects
     ON developers.id = developer_id
@@ -83,16 +84,17 @@ WHERE due_date < '2015-01-01 00:00:00'
 ORDER BY due_date ASC;
 ```
 
-In addition to the already available syntatic sugar, the advantage to the Database Query Builder
-is that it returns an array collection of objects. Objects that are readily available to use in your
-application. It persisted the database through a gateway and rendered the object from a factory.
+In addition to the already available syntactic sugar, the advantage to the
+Database Query Builder is that it returns an array collection of objects.
+Objects that are readily available to use in your application. It persisted the
+database through a gateway and rendered the object from a factory.
 ```php
 DB::table('developers')
-	->select('developers.first_name', 'developers.last_name', 'projects.project_name', 'projects.due_date')
-	->join('projects', 'developers.id', '=', 'projects.developer_id')
-	->where('projects.due_date', '<', '2015-01-01 00:00:00')
-	->orderBy('projects.due_date', 'ASC')
-	->get();
+    ->select('developers.first_name', 'developers.last_name', 'projects.project_name', 'projects.due_date')
+    ->join('projects', 'developers.id', '=', 'projects.developer_id')
+    ->where('projects.due_date', '<', '2015-01-01 00:00:00')
+    ->orderBy('projects.due_date', 'ASC')
+    ->get();
 ```
 
 - [x] Comparing two dates => *tested*
