@@ -5,13 +5,12 @@
     "license": "MIT",
     "require": {
         "laravel/framework": "~4.2.3",
-        "erusev/parsedown-extra": "dev-master",
-		"nesbot/Carbon": "*"
+        "erusev/parsedown-extra": "dev-master"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.1.3",
         "psy/psysh": "~0.1.9",
-		"way/generators": "2.*"
+        "way/generators": "2.*"
     },
     "autoload": {
         "classmap": [
