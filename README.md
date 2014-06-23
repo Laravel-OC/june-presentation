@@ -66,6 +66,7 @@ folder.
 Possible topic ideas
 --------------------
 - [x] Constructing a SQL query w/ joins
+
 To join is lterally join two table selections together for one query
 Such a selection could lead to redundancy as every permutation is given.
 However, joining tables based on a condition allows us to specify a complex selection
