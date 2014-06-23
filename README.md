@@ -75,7 +75,7 @@ SELECT first_name, last_name, project_name FROM developers INNER JOIN projects O
 ```
 
 ```php
-DV::table('developers')
+DB::table('developers')
 	->join('projects', function($join) 
 	{
 		$join->on('projects', 'developers.id', '=' 'projects.developer_id)
