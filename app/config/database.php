@@ -26,7 +26,7 @@ return array(
     |
     */
 
-    'default' => 'sqlite',
+    'default' => array_get($_ENV, "DATABASE_TYPE", "sqlite"),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,9 +55,9 @@ return array(
         'mysql' => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
-            'database'  => 'june_presentation',
-            'username'  => 'root',
-            'password'  => 'klvtz',
+            'database'  => array_get($_ENV, "DATABASE_NAME", "june_presentation"),
+            'username'  => array_get($_ENV, "DATABASE_USER", "root"),
+            'password'  => array_get($_ENV, "DATABASE_PASS", "klvtz"),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
