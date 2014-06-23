@@ -94,7 +94,6 @@ Route::get("/dump", function() {
 		->where('projects.due_date', '<', '2015-01-01 00:00:00')
 		->orderBy('projects.due_date', 'ASC')
 		->get();
-	dd($pile);
 });
 ```
 
