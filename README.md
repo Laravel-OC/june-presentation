@@ -66,10 +66,10 @@ folder.
 Possible topic ideas
 --------------------
 - [x] Constructing a SQL query w/ joins
+To join is lterally join two table selections together for one query
+Such a selection could lead to redundancy as every permutation is given.
+However, joining tables based on a condition allows us to specify a complex selection
 ```sql
-// To join is lterally join two table selections together for one query
-// Such a selection could lead to redundancy as every permutation is given.
-// However, joining tables based on a condition allows us to specify a complex selection
 SELECT first_name, last_name, project_name FROM developers INNER JOIN projects ON developers.id = developer_id WHERE due_date < 24 ORDER BY due_date;   
 ```
 
