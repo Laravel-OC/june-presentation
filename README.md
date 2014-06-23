@@ -60,7 +60,7 @@ index file or a manifest, but if anyone thinks it's important I'll consider it.
 
 ### Assets
 
-Assets are concatenated by a super ghetto script, `build.php`, in the root
+Assets are concatenated by a *superior* ghetto script, `build.php`, in the root
 folder.
 
 Possible topic ideas
@@ -114,7 +114,30 @@ echo $diff->format("%y years, %m months, %d days");
 echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
 ```
 
-- [ ] Doing template inheritance (i.e. not repeating `<!DOCTYPE>`, `<head>`, etc.)
+- [x] Doing template inheritance (i.e. not repeating `<!DOCTYPE>`, `<head>`, etc.)
+
+Master pages are best used when we want to avoid repetitions in our code. We can create a simple
+default master by creating a layouts folder with a default or master item. As your project grows larger, obviously we would want to separate other master files. In a sense, they are a defautl template that can be inherited by other sections of content that can then be extended.
+```html
+<html lang='en'>
+<head>
+    <meta charset='UTF-8' />
+    <title>Laravel Developers</title>
+</head>
+<body>
+	<div class='container col-md-6 col-md-offset-3'>
+		@yield('content')
+	</div>
+	@if ($projects)
+		@yield('js')
+	@endif
+</body>
+</html>
+```
+
+```php
+
+```
 
 - [x] Loading files and classes automatically
 
