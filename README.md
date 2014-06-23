@@ -116,11 +116,11 @@ echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
 
 - [ ] Doing template inheritance (i.e. not repeating `<!DOCTYPE>`, `<head>`, etc.)
 
-- [ ] Simple routing
+- [x] Loading files and classes automatically
 
-- [ ] Loading files and classes automatically
+- [x] "Pretty" urls (without `.php`, GET params w/out `?`, etc.)
 
-- [ ] "Pretty" urls (without `.php`, GET params w/out `?`, etc.)
+- [x] Simple routing
 
 - [ ] Database migrations (reversable)
 
