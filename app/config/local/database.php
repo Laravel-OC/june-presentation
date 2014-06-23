@@ -24,9 +24,9 @@ return array(
         'mysql' => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
-            'database'  => array_get($_ENV, "DATABASE_NAME"),
-            'username'  => array_get($_ENV, "DATABASE_USER"),
-            'password'  => array_get($_ENV, "DATABASE_PASS"),
+            'database'  => array_get($_ENV, "DATABASE_NAME", "laravel_presentation"),
+            'username'  => array_get($_ENV, "DATABASE_USER", "root"),
+            'password'  => array_get($_ENV, "DATABASE_PASS", "klvtz"),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',

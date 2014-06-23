@@ -119,6 +119,7 @@ echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
 Master pages are best used when we want to avoid repetitions in our code. We can create a simple
 default master by creating a layouts folder with a default or master item. As your project grows larger, obviously we would want to separate other master files. In a sense, they are a defautl template that can be inherited by other sections of content that can then be extended.
 ```html
+<!-- app/views/partials/master.blade.php -->
 <html lang='en'>
 <head>
     <meta charset='UTF-8' />
@@ -136,7 +137,19 @@ default master by creating a layouts folder with a default or master item. As yo
 ```
 
 ```php
+@extends('partials.master')
 
+@section('content')
+	<h1>Projects due for {{ date('Y') }}</h1>
+	@if(isset($projects))
+		@foreach($projects as $project)
+			<h3>Project: {{$project->project_name}}</h3>
+			<p>Due Date: {{$project->due_date}}</p>
+		@endforeach
+	@else
+		<p>All finished!</p>
+	@endif
+@stop
 ```
 
 - [x] Loading files and classes automatically
