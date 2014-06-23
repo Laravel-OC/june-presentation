@@ -113,9 +113,9 @@ $user_no_3 = $repo-&gt;findByPk(3);</code></pre></article>
 <pre><code class="language-php">// grabbing the first 10 teenage users
 // organized by age (old -&gt; young)
 $teenagers = $repo-&gt;fetchByQuery(
-  "SELECT * FROM users
-    WHERE age BETWEEN 13 AND 19
-    ORDER BY age DESC LIMIT 10"
+    "SELECT * FROM users
+        WHERE age BETWEEN 13 AND 19
+        ORDER BY age DESC LIMIT 10"
 );</code></pre></article>
             <article class="slide"><h2>Things to think about</h2>
 <ul>
@@ -140,18 +140,53 @@ $teenagers = $repo-&gt;fetchByQuery(
         </h5>
     </li>
     <li class="slide">
-        <h5>
-            Different data types:
-            <ul>
-                <li><code>json</code> in psql</li>
-                <li><code>datetime</code>s as Date objects</li>
-            </ul>
-        </h5>
+        <h5>Different data types</h5>
+        <ul>
+            <li><code>json</code> in pgsql</li>
+            <li><code>datetime</code>s as Date objects</li>
+        </ul>
     </li>
 </ul>
 
 
 </article>
+            <article class="slide"><h2>Basic routing</h2></article>
+            <article class="slide"><h2>The Laravel way</h2>
+<pre><code class="language-php">Route::get('/blog', function() {
+    // do blog stuff
+});
+
+// or
+
+Route::get("/blog", "BlogController@showBlog");</code></pre></article>
+            <article class="slide"><h2>The Laravel way (cont'd)</h2>
+<pre><code class="language-php">// different request methods
+
+Route::get("/blog/post/{id}", function ($id) {
+    // show that post
+});
+
+Route::delete("/blog/post/{id}", function ($id) {
+    // delete that post
+});</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way</h2>
+<pre><code class="language-bash">+-- about
+   |   +-- index.php
+   +-- blog
+       +-- index.php
+       +-- post
+           +-- index.php</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way</h2>
+<pre><code class="language-php">switch (strtoupper($_SERVER["REQUEST_METHOD")) {
+    "GET":
+        // show the post
+        break;
+    "DELETE":
+        // do delete stuff
+        break;
+    default:
+        // show a 404
+}</code></pre></article>
     
             <p class="deck-status" aria-role="status">
                 <span class="deck-status-current"></span>
