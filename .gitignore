@@ -7,3 +7,4 @@ composer.phar
 /tags
 /public/css/dist.css
 /public/js/dist.js
+/app/config/database.php

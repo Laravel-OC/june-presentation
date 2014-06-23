@@ -66,12 +66,28 @@ folder.
 Possible topic ideas
 --------------------
 - [x] Constructing a SQL query w/ joins
+```sql
+// To join is lterally join two table selections together for one query
+// Such a selection could lead to redundancy as every permutation is given.
+// However, joining tables based on a condition allows us to specify a complex selection
+SELECT first_name, last_name, project_name FROM developers INNER JOIN projects ON developers.id = developer_id WHERE due_date < 24 ORDER BY due_date;   
+```
 
-- [ ] Comparing two dates
+```php
+DV::table('developers')
+	->join('projects', function($join) 
+	{
+		$join->on('projects', 'developers.id', '=' 'projects.developer_id)
+			->where('projects.due_date', '<', 24)
+			->select('developers.first_name', 'developers.last_name', 'projects.project_name')
+	})->get();
+```
+
+- [x] Comparing two dates
 
 ```php
 // regular PHP
-$then = new DateTime("july 4th, 2014");
+$then = new DateTime("July 4th, 2014");
 $now  = new DateTime();
 
 $diff = $then->diff($now, true);

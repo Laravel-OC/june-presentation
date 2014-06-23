@@ -26,7 +26,7 @@ return array(
     |
     */
 
-    'default' => 'sqlite',
+    'default' => 'mysql',
 
     /*
     |--------------------------------------------------------------------------
@@ -55,9 +55,9 @@ return array(
         'mysql' => array(
             'driver'    => 'mysql',
             'host'      => 'localhost',
-            'database'  => 'forge',
-            'username'  => 'forge',
-            'password'  => '',
+            'database'  => 'june_presentation',
+            'username'  => 'root',
+            'password'  => 'klvtz',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix'    => '',
