@@ -71,17 +71,25 @@ To join is lterally join two table selections together for one query
 Such a selection could lead to redundancy as every permutation is given.
 However, joining tables based on a condition allows us to specify a complex selection
 ```sql
-SELECT first_name, last_name, project_name FROM developers INNER JOIN projects ON developers.id = developer_id WHERE due_date < 24 ORDER BY due_date;   
+SELECT
+    first_name,
+    last_name,
+    project_name
+FROM developers
+INNER JOIN projects
+    ON developers.id = developer_id
+WHERE due_date < 24
+ORDER BY due_date ASC;
 ```
 
 ```php
 DB::table('developers')
-	->join('projects', function($join) 
-	{
-		$join->on('projects', 'developers.id', '=' 'projects.developer_id)
-			->where('projects.due_date', '<', 24)
-			->select('developers.first_name', 'developers.last_name', 'projects.project_name')
-	})->get();
+    ->select('developers.first_name', 'developers.last_name', 'projects.project_name')
+    ->join('projects', function($join) {
+        $join->on('projects', 'developers.id', '=', 'projects.developer_id');
+    })->where('projects.due_date', '<', 24)
+    ->orderBy("due_date", "ASC")
+    ->get();
 ```
 
 - [x] Comparing two dates
