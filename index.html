@@ -229,10 +229,14 @@ foreach (glob("../lib/*.php") as $file) {
 }</code></pre></article>
             <article class="slide"><h1>PUBLIC SERVICE ANNOUNCEMENT</h1></article>
             <article class="slide"><h1>USE COMPOSER</h1></article>
-            <article class="slide"><h2>CSRF tokens</h2>
-<blockquote>
-<p>TODO: Description of the problem CSRF solves goes here</p>
+            <article class="slide"><h2>CSRF tokens</h2></article>
+            <article class="slide"><blockquote>
+<p>CSRF is an attack which forces an end user to execute unwanted actions on a web
+application in which he/she is currently authenticated</p>
+<p>&mdash; <a href="https://www.owasp.org/index.php/CSRF">owasp.org</a></p>
 </blockquote></article>
+            <article class="slide"><h1>Does everyone know what CSRF is?</h1></article>
+            <article class="slide"><h1>And you're all protecting yourselves correctly, right?</h1></article>
             <article class="slide"><h2>The Laravel way</h2>
 <pre><code class="language-php">&lt;input type="hidden"
     name="_token"
@@ -248,7 +252,7 @@ foreach (glob("../lib/*.php") as $file) {
 
 // Or
 Route::post('register',
-    ["before" =&gt; "csrf", "Controller@postAction"]
+    ["before" =&gt; "csrf", "Controller@register"]
 );</code></pre></article>
             <article class="slide"><h2>The vanilla PHP way</h2>
 <pre><code class="language-php">// generates the csrf token
