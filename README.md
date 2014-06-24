@@ -119,7 +119,7 @@ echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
 Master pages are best used when we want to avoid repetitions in our code. We can
 create a simple default master by creating a layouts folder with a default or
 master item. As your project grows larger, obviously we would want to separate
-other master files. In a sense, they are a defautl template that can be
+other master files. In a sense, they are a default template that can be
 inherited by other sections of content that can then be extended.
 
 ```html
@@ -185,11 +185,6 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateProjectsTable extends Migration {
 
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('projects', function(Blueprint $table)
@@ -202,12 +197,6 @@ class CreateProjectsTable extends Migration {
         });
     }
 
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::drop('projects');
@@ -215,10 +204,225 @@ class CreateProjectsTable extends Migration {
 
 }
 ```
-
 - [ ] Functional testing (simulating HTTP requests)
 
-- [ ] Simple CRUD for simple models
+- [x] Simple CRUD for simple models using REST
+  - [x] Blade Forms
+  - [x] Redirecting to routes
+
+REST is simply cleaning your URI request into elements that are organized and
+easy to understand. REST allows you to create, read, update, and delete
+data. Sound familiar? Yes, CRUD. CRUD is used within REST to persist the
+database in response to a transaction. The main difference is a RESTful design
+allows us to keep our requests and responses organized. To take advantage of
+REST we will register a resource within our `app/routes.php`. By taking
+advantage of an HTTP Transport Layer, that is a controller, we can persist the
+database in a RESTful manner.
+```php
+// @param URI request group, controller
+// Why resource and not controller, we want to explicitly define our REST
+// methods with no assumptions. Combats an implicit design from Code Igniter
+Route::resource('developers', 'DevelopersController');
+```
+The following resource will register a proper route for a URI request. This
+includes indexing, creating, storing, showing, editing, updating, putting, and
+destroying. These are HTTP verbs that handle our CRUD functionality. Artisan
+allows you to see these associations via `php artisan routes`:
+
+| URI                                   | Name               | Action                       |
+| ------------------------------------- | ------------------ | ---------------------------- |
+| GET\HEAD developers                   | developers.index   | DevelopersController@index   |
+| GET\HEAD developers/create            | developers.create  | DevelopersController@create  |
+| POST developers                       | developers.store   | DevelopersController@store   |
+| GET\HEAD developers/{developers}      | developers.show    | DevelopersController@show    |
+| GET\HEAD developers/{developers}/edit | developers.edit    | DevelopersController@edit    |
+| PUT developers/{developers}           | developers.update  | DevelopersController@update  |
+| PATCH developers/{developers}         | developers.update  | DevelopersController@update  |
+| DELETE developers/{developers}        | developers.destroy | DevelopersController@destroy |
+
+Many developers get mixed up with PUT and PATCH. PUT is updating an entire entry
+whereas PATCH is replacing a section of data --not the whole thing.
+
+Our first controller method, index, is primarily concern with querying
+the database and returning an object collection of developers. Thanks to the
+Eloquent ORM, we can do so with ease. Notice that we send through the view an
+array containing the object collection. Our view can then process this data and
+display it via Blade templating.
+```php
+<?php
+
+class DevelopersController extends \BaseController {
+
+	/**
+	 * Display a listing of the developers
+	 * GET /developers
+	 *
+	 * @return Response
+	 */
+	public function index()
+	{
+		$developers = Developer::all();
+		return View::make('developers.index', compact('developers'));
+	}
+```
+
+Our second controller method will return a form that will allow us to create a
+new developer
+```php
+	/**
+	 * Show the form for creating a new developer.
+	 * GET /developers/create
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		return View::make('developers.create');
+	}
+```
+
+Our third controller method will create a new instance of the Developer model.
+This model has access to Eloquent properties. We will assign the main
+attributes of a Developer model from the Input facade. With Input, we can
+explicitly define the assignment of properties. We save the instance to which
+then stores the value as a new entity in the database. We clean our headers and
+redirect back to our developers index page.
+
+```php
+	/**
+	 * Store a newly created developer in storage
+	 * POST /developers
+	 *
+	 * @return Response
+	 */
+	public function store()
+	{
+		$developer = new Developer;
+		$developer->first_name = Input::only("first_name");
+		$developer->last_name = Input::only("last_name");
+		$developer->save();
+
+		return Redirect::route('developers.index');
+	}
+```
+
+Alternatively, you may want to take advantage of Mass Assignment.
+The advantage of mass assignment is the ability to easily bind data to an
+entity --no matter the scale of inputs.
+```php
+	 Developer::create(Input::all());
+```
+
+Be sure to create a blacklist or whitelist in your models to defend against Mass
+Assignment Vulnerability.
+```php
+	<?php
+
+	class Developer extends Eloquent {
+		protected $fillable = ['first_name', 'last_name'];
+	}
+```
+
+Our fourth controller method will grab an identifier from our URI and use it as
+a parameter to find a developer and then return that specific developer to a
+view.
+```php
+	/**
+	 * Display the specified developer.
+	 * GET /developers/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function show($id)
+	{
+		$developer = Developer::findOrFail($id);
+		return View::make('developers.show', compact('developer');
+	}
+```
+
+Our fifth controller method will grab an identifier from our URI and specific
+action. In this example, we want to edit a developer with a certain identity.
+REST allows a clean and explicit URI. We find the developer base on that
+identity and display a view with a form to edit out entity.
+```php
+	/**
+	 * Show the form for editing the developer resource.
+	 * GET /developers/{id}/edit
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		$developer = Developer::findOrFail($id);
+		return View::make('developers.edit', compact('developer');
+	}
+```
+
+We can use form-model binding to bind a model's current instance
+variables to a form. That is, list the current values of a model in input tag
+values.
+```php
+	@section('content')
+		{{ Form::model($developer, ['method' => 'PATCH', 'route' =>
+		['developers.update', $developer->id]]) }}
+			<div>
+				{{ Form::label('first_name', 'First Name:') }}
+				{{ Form::text('first_name') }}
+			</div>
+			<div>
+				{{ Form::label('last_name', 'Last Name:') }}
+				{{ Form::text('last_name') }}
+			</div>
+			<div>
+				{{ Form::submit('Update Developer') }}
+			</div>
+	@stop
+```
+
+Our sixth controller method takes advantage of spoofing a PATCH action. That is
+updating a section of data. Once we edit our form, we can then update our
+current developer object by grabbing a current model from persistence, fill-in
+the new attributes, and save them. Notice we redirect back using that original
+identifier, we can now view our changes immediately
+```php
+	/**
+	 * Update the specified resource in storage.
+	 * PATCH /developers/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function update($id)
+	{
+		$developer = Developer::findOrFail($id);
+		$developer->fill(Input::all());
+		$developer->save();
+
+		return Redirect::route('developers.show', ['id' => $id]);
+	}
+```
+Our seventh, and final controller, will remove a developer from storage. We
+first find the user base on their identity. Then we delete the entity from
+persistence. That simple. We redirect back to the developers index to see
+our current list of developers.
+```php
+	/**
+	 * Remove the specified resource from storage.
+	 * DELETE /developers/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function destroy($id)
+	{
+		$developer = Developer::findOrFail($id);
+		$developer->delete();
+
+		return Redirect::route('developers.index');
+	}
+```
 
 - [ ] JSON responses (headers too)
 
@@ -247,6 +451,15 @@ class CreateProjectsTable extends Migration {
 - [ ] Maintenance mode
 
 - [ ] Error handling
+
+- [ ] IoC Container
+
+- [ ] Dependency Injection
+
+- [ ] Laravel Resources and the Community
+
+- [ ] Laravel as your first ever PHP framework
+
 
 Author Blurbs
 -------------
