@@ -446,7 +446,7 @@ return Redirect::action('DevelopersController@index');
 
 The ability to redirect comes with the ease of use that Laravel offers
 internally. Behind the scenes, Laravel will handle your redirect in addition to
-keeping your headers clean. Think [F5] on a POST. In addition to this, you can
+keeping your headers clean. Think *F5* on a POST. In addition to this, you can
 easily pass through session data through flash:
 ```php
 return Redirect::to('developer/login')->with('message', 'Login Failed');
@@ -454,7 +454,128 @@ return Redirect::to('developer/login')->with('message', 'Login Failed');
 
 - [x] CSRF tokens
 
-- [ ] Authentication (password hashing, encryption)
+- [x] Authentication (password hashing, encryption)
+
+Authentication is absolutely essential in any application that requires private,
+but moderated, user interaction. The most well known application of
+authentication is login a user for an interactive session.
+
+Laravel's Authentication facade allows for easy authentication and session
+creation. However, before we go through the process of authenticating a user, we
+need an entity with a password that has been hashed. Password hashing is
+essential in keeping your database credentials secure and difficult to
+compromise. Let's use our database seeder to demonstrate how easy it is to hash
+a password:
+```php
+<?php
+
+use \Developer;
+
+class DeveloperTableSeeder extends Seeder {
+
+	public function run()
+	{
+		Developer::truncate();
+
+		Developer::create([
+			'email'		 => 'ciaran@ciarandowney.com',
+			'username'	 => 'ciarand',
+			'password'   => Hash::make('1234'),
+		]);
+	}
+}
+
+// Alternatively, if you were creating an account via form:
+Developer::create([
+	'username'   => Input::only('username'),
+	'email'      => Input::only('email'),
+	'password'   => Hash::make(Input::only('password')),
+]);
+```
+| password                                                       |
+| -------------------------------------------------------------- |
+| '$2y$10$pTfWG6LZoSU4P86Ksw3SMuabv.g92Z75RMa8cO98llVYr8AZvZJ12' |
+
+Notice how easy it is to generate a random key, hash it, salt it, and much more,
+for a proper encryption. Now that we generated a developer account with a hashed
+passoword, let's authenticate it for a application session.
+
+Wihin our route, we will register a login and logout route that will use our
+Session Controller to automate a user's life-cycle. We register a resource to
+combat any other requests in our URI that may be made. Remember, it always good
+to be explicit versus allowing implicit request. We also include a developer
+admin section to simulate a moderated view.
+
+```php
+Route::get('login', 'SessionsController@create');
+Route::get('logout', 'SessionsController@destroy');
+
+Route::resource('sessions', 'SessionsController');
+
+Route::get('projects', function()
+{
+	return 'List of Super Secret Projects';
+})->before('auth');
+```
+Notice we apply a before filter. This filter will check to see if a user is a
+guest. By default, a user who has not logged-in, is a guest. We then redirect
+the user to a login route. Else, we can safely come to the deduction that the
+user is a developer and therefore can see the projects view.
+
+```php
+Route::filter('auth', function()
+{
+    if (Auth::guest())
+    {
+		return Redirect::guest('login');
+    }
+});
+```
+
+Within our Session Controller, we will be primarily concern with login and
+logout. Our create method will check to see if a user is authenticated, if they
+are, then they can be redirected to the projects view. Else, we will return a
+developer login view.
+
+```php
+public function create()
+{
+	if (Auth::check()) return Redirect::to('/projects');
+	return View::make('developers.login');
+}
+```
+
+Once we submit our form for login, our store method will attempt to login the
+user base on their credentials provided. Notice we explicitly define which
+inputs to use. We then return a greeting to the developer to simulate a
+successful login. If the attempt failed, we can redirect back with the input and
+a flash message.
+
+```php
+public function store()
+{
+	if (Auth::attempt(Input::only('email', 'password'))) {
+		return "Get to work, " . Auth::user()->username . "!";
+	}
+	return Redirect::back()->with('message', 'Invalid
+	credentials')->withInput();
+}
+```
+
+Finally, to logout a user, we use the destroy method to destroy the current login
+session.
+
+```php
+public function destroy()
+{
+	Auth::logout();
+	return Redirect::home()->with('message', 'Logged out');
+}
+```
+
+With a few basic methods, the Auth facade offers an easy and natural way to
+authenticate user. No longer do you have to concern yourself with writing an
+authentication module for your users. Like many things in Laravel, it just works.
 
 - [ ] Deployment process
 
