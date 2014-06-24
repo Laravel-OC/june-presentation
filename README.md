@@ -346,18 +346,18 @@ action. In this example, we want to edit a developer with a certain identity.
 REST allows a clean and explicit URI. We find the developer base on that
 identity and display a view with a form to edit out entity.
 ```php
-	/**
-	 * Show the form for editing the developer resource.
-	 * GET /developers/{id}/edit
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function edit($id)
-	{
-		$developer = Developer::findOrFail($id);
-		return View::make('developers.edit', compact('developer');
-	}
+/**
+ * Show the form for editing the developer resource.
+ * GET /developers/{id}/edit
+ *
+ * @param  int  $id
+ * @return Response
+ */
+public function edit($id)
+{
+	$developer = Developer::findOrFail($id);
+	return View::make('developers.edit', compact('developer');
+}
 ```
 
 We can use form-model binding to bind a model's current instance
