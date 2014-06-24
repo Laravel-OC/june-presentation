@@ -158,7 +158,58 @@ default master by creating a layouts folder with a default or master item. As yo
 
 - [x] Simple routing
 
-- [ ] Database migrations (reversable)
+- [x] Database migrations (reversable)
+
+Migrtations allow us to version control our database. This entails a full creation
+and rollback for every single database event. To handle migrations we first call: 
+`php artisan migrate:install`. This will create a migration table to keep track of all
+migrations used. Every migration file that is made will contain a version number associated
+with a time stamp.
+
+To create a migration file in our database, we call: 
+`php artisan migrate:make create_developers_table`. Note how the command describes the action that our
+database will handle. Inside our CreateProjectsTable object, we have two methods: up and down. Up is what
+we will migrate to our database. Down is what action to take when we rollback. To rollback we
+call `php artisan migrate:rollback`.
+
+```php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+
+class CreateProjectsTable extends Migration {
+
+	/**
+	 * Run the migrations.
+	 *
+	 * @return void
+	 */
+	public function up()
+	{
+		Schema::create('projects', function(Blueprint $table)
+		{
+			$table->increments('id');
+			$table->string('project_name')->unique;
+			$table->string('developer_id');
+			$table->dateTime('due_date');
+			$table->timestamps();
+		});
+	}
+
+
+	/**
+	 * Reverse the migrations.
+	 *
+	 * @return void
+	 */
+	public function down()
+	{
+		Schema::drop('projects');
+	}
+
+}
+```
 
 - [ ] Functional testing (simulating HTTP requests)
 
