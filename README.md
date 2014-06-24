@@ -441,7 +441,7 @@ return Redirect::to('developer/login');
 return Redirect::to('login');
 
 // Redirect to a Controller action
-return Redirect::to('DevelopersController@index');
+return Redirect::action('DevelopersController@index');
 ```
 
 The ability to redirect comes with the ease of use that Laravel offers
