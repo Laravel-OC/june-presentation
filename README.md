@@ -426,7 +426,31 @@ public function destroy($id)
 
 - [ ] JSON responses (headers too)
 
-- [ ] Redirecting
+- [x] Redirecting
+
+A redirect is a special type of response object which redirects the flow of the
+application to another route. With Laravel, redirecting couldn't be easier. We
+have the option to redirect using a route resource, a named route, or even
+a controller action:
+
+```php
+// Redirect to a route
+return Redirect::to('developer/login');
+
+// Redirect to a named route
+return Redirect::to('login');
+
+// Redirect to a Controller action
+return Redirect::to('DevelopersController@index');
+```
+
+The ability to redirect comes with the ease of use that Laravel offers
+internally. Behind the scenes, Laravel will handle your redirect in addition to
+keeping your headers clean. Think [F5] on a POST. In addition to this, you can
+easily pass through session data through flash:
+```php
+return Redirect::to('developer/login')->with('message', 'Login Failed');
+```
 
 - [x] CSRF tokens
 
