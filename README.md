@@ -130,12 +130,12 @@ inherited by other sections of content that can then be extended.
     <title>Laravel Developers</title>
 </head>
 <body>
-	<div class='container col-md-6 col-md-offset-3'>
-		@yield('content')
-	</div>
-	@if ($projects)
-		@yield('js')
-	@endif
+    <div class='container col-md-6 col-md-offset-3'>
+        @yield('content')
+    </div>
+    @if ($projects)
+        @yield('js')
+    @endif
 </body>
 </html>
 ```
@@ -144,15 +144,15 @@ inherited by other sections of content that can then be extended.
 @extends('partials.master')
 
 @section('content')
-	<h1>Projects due for {{ date('Y') }}</h1>
-	@if(isset($projects))
-		@foreach($projects as $project)
-			<h3>Project: {{$project->project_name}}</h3>
-			<p>Due Date: {{$project->due_date}}</p>
-		@endforeach
-	@else
-		<p>All finished!</p>
-	@endif
+    <h1>Projects due for {{ date('Y') }}</h1>
+    @if(isset($projects))
+        @foreach($projects as $project)
+            <h3>Project: {{$project->project_name}}</h3>
+            <p>Due Date: {{$project->due_date}}</p>
+        @endforeach
+    @else
+        <p>All finished!</p>
+    @endif
 @stop
 ```
 
@@ -185,33 +185,33 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateProjectsTable extends Migration {
 
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('projects', function(Blueprint $table)
-		{
-			$table->increments('id');
-			$table->string('project_name')->unique;
-			$table->string('developer_id');
-			$table->dateTime('due_date');
-			$table->timestamps();
-		});
-	}
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('projects', function(Blueprint $table)
+        {
+            $table->increments('id');
+            $table->string('project_name')->unique;
+            $table->string('developer_id');
+            $table->dateTime('due_date');
+            $table->timestamps();
+        });
+    }
 
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::drop('projects');
-	}
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::drop('projects');
+    }
 
 }
 ```
