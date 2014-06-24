@@ -1,0 +1,19 @@
+/* make all these things the Laravel orange (taken from docs page, not logo) */
+h2,
+cite,
+a, a:link, a:visited  {
+    color: #e71818;
+}
+
+/* make all these things black (taken from docs page, not logo) */
+body,
+h1,
+.deck-container {
+    color: #444;
+}
+
+/* h2s were too small and had a weird border color */
+h2 {
+    font-size: 42pt;
+    border-bottom-color: #e3e3e3;
+}
