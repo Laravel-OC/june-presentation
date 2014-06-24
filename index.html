@@ -117,33 +117,33 @@ $teenagers = $repo-&gt;fetchByQuery(
         WHERE age BETWEEN 13 AND 19
         ORDER BY age DESC LIMIT 10"
 );</code></pre></article>
-            <article class="slide"><h2>Things to think about</h2>
+            <article class="slide"><h2>Other benefits Laravel provides</h2>
 <ul>
     <li class="slide">
         <h5>
-            SQL injection
+            SQL injection protection
         </h5>
     </li>
     <li class="slide">
         <h5>
-            Multiple joins
+            Saved scopes (saved conditions that can be stacked)
         </h5>
     </li>
     <li class="slide">
         <h5>
-            Chunking
+            Chunking (load X records into memory at a time)
         </h5>
     </li>
     <li class="slide">
         <h5>
-            Different DB engines
+            Seamless interop between different DB engines
         </h5>
     </li>
     <li class="slide">
         <h5>Different data types</h5>
         <ul>
-            <li><code>json</code> in pgsql</li>
             <li><code>datetime</code>s as Date objects</li>
+            <li><code>mutators</code> and <code>accessors</code></li>
         </ul>
     </li>
 </ul>
@@ -187,6 +187,153 @@ Route::delete("/blog/post/{id}", function ($id) {
     default:
         // show a 404
 }</code></pre></article>
+            <article class="slide"><h2>Autoloading</h2></article>
+            <article class="slide"><h2>The Laravel way</h2>
+<p>Use composer</p></article>
+            <article class="slide"><h2>The Composer way</h2>
+<pre><code class="language-javascript">{
+    "require": {
+        "laravel/framework": "~4.2.3"
+    },
+    "autoload": {
+        "psr-4": {"MyNamespace\\": "src/"}
+    },
+    "config": { "preferred-install": "dist" },
+    "minimum-stability": "stable"
+}</code></pre></article>
+            <article class="slide"><h2>The Composer way (cont'd)</h2>
+<pre><code class="language-php">&lt;?php // entry file
+
+require __DIR__ . "/vendor/autoload.php";</code></pre></article>
+            <article class="slide"><h2>The Composer way (cont'd)</h2>
+<pre><code class="language-php">// as long as the autoload file has been included
+// before, we don't have to specify anything else
+
+$cat = new MyNamespace\Model\Cat();
+
+$hat = new MyNamespace\Fashion\Hat();
+
+$cat-&gt;moveInside($hat);</code></pre></article>
+            <article class="slide"><h2>The Old way</h2>
+<pre><code class="language-php">// ever seen something like this?
+require "../inc/libs/_globals/bootstrap_NEW.php";
+
+// or this?
+foreach ($required_files as $file) {
+    require $file;
+}
+
+// or this?
+foreach (glob("../lib/*.php") as $file) {
+    require $file;
+}</code></pre></article>
+            <article class="slide"><h1>PUBLIC SERVICE ANNOUNCEMENT</h1></article>
+            <article class="slide"><h1>USE COMPOSER</h1></article>
+            <article class="slide"><h2>CSRF tokens</h2>
+<blockquote>
+<p>TODO: Description of the problem CSRF solves goes here</p>
+</blockquote></article>
+            <article class="slide"><h2>The Laravel way</h2>
+<pre><code class="language-php">&lt;input type="hidden"
+    name="_token"
+    value="&lt;?php echo csrf_token(); ?&gt;"&gt;</code></pre></article>
+            <article class="slide"><h2>The Laravel way (cont'd)</h2>
+<pre><code class="language-php">Route::post('register', [
+    // filters to apply
+    'before' =&gt; 'csrf',
+    function() {
+        return 'You gave a valid CSRF token!';
+    }
+]);
+
+// Or
+Route::post('register',
+    ["before" =&gt; "csrf", "Controller@postAction"]
+);</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way</h2>
+<pre><code class="language-php">// generates the csrf token
+function csrf_token()
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+
+    $_SESSION["token"] =
+        md5(uniqid(mt_rand(), true)));
+
+    return ($_SESSION["_token"]);
+}</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
+<pre><code class="language-php">&lt;input type="hidden"
+    name="_token"
+    value="&lt;?php echo csrf_token(); ?&gt;"&gt;</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
+<pre><code class="language-php">function check_token()
+{
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+
+    // works with both POST and GET
+    $req = count($_POST) ? $_POST : $_GET;
+
+    return isset($req["_token"])
+        &amp;&amp; $req["_token"] !== $_SESSION["_token"];
+}</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
+<pre><code class="language-php">// now just call that in every file you need it
+if (check_token()) {
+    show_error_page_or_whatever_we_do();
+}</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
+<pre><code class="language-php">// except...
+
+// remember this line?
+$_SESSION["token"] =
+    md5(uniqid(mt_rand(), true)));
+
+// are you sure that's secure?</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
+<pre><code class="language-php">// Here's what Laravel does
+$random = 'openssl_random_pseudo_bytes';
+if (function_exists($random)) {
+    $bytes  = $random($length * 2);
+    $base64 = base64_encode($bytes);
+
+    return substr(
+        str_replace(['/', '+', '='], '', $base64),
+        0,
+        $length
+    );
+}</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
+<pre><code class="language-php">// or if we don't have openssl_random_pseudo_bytes
+} else {
+    $pool = '0123456789'
+        . 'abcdefghipqrstuvwxyz'
+        . 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    return substr(
+        str_shuffle(str_repeat($pool, 5)),
+        0,
+        $length
+    );
+}</code></pre></article>
+            <article class="slide"><h2>Questions for the audience</h2>
+<ul>
+<li>
+<p>How many of you have written functions like this?</p>
+</li>
+<li>
+<p>Who can tell us what these parameters mean?</p>
+</li>
+<li>How much do you trust your implementation?</li>
+</ul></article>
+            <article class="slide"><blockquote>
+<p>Anyone, from the most clueless amateur to the best cryptographer, can create an
+algorithm that he himself can't break.</p>
+<p>&mdash; <cite><a href="https://www.schneier.com/blog/archives/2011/04/schneiers_law.html">Bruce Schneier</a></cite></p>
+</blockquote></article>
     
             <p class="deck-status" aria-role="status">
                 <span class="deck-status-current"></span>
