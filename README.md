@@ -224,7 +224,7 @@ class CreateProjectsTable extends Migration {
 
 - [ ] Redirecting
 
-- [ ] CSRF tokens
+- [x] CSRF tokens
 
 - [ ] Authentication (password hashing, encryption)
 
