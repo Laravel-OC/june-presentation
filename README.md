@@ -116,8 +116,12 @@ echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
 
 - [x] Doing template inheritance (i.e. not repeating `<!DOCTYPE>`, `<head>`, etc.)
 
-Master pages are best used when we want to avoid repetitions in our code. We can create a simple
-default master by creating a layouts folder with a default or master item. As your project grows larger, obviously we would want to separate other master files. In a sense, they are a defautl template that can be inherited by other sections of content that can then be extended.
+Master pages are best used when we want to avoid repetitions in our code. We can
+create a simple default master by creating a layouts folder with a default or
+master item. As your project grows larger, obviously we would want to separate
+other master files. In a sense, they are a defautl template that can be
+inherited by other sections of content that can then be extended.
+
 ```html
 <!-- app/views/partials/master.blade.php -->
 <html lang='en'>
@@ -160,17 +164,18 @@ default master by creating a layouts folder with a default or master item. As yo
 
 - [x] Database migrations (reversable)
 
-Migrtations allow us to version control our database. This entails a full creation
-and rollback for every single database event. To handle migrations we first call: 
-`php artisan migrate:install`. This will create a migration table to keep track of all
-migrations used. Every migration file that is made will contain a version number associated
-with a time stamp.
+Migrations allow us to version control our database. This entails a full
+creation and rollback for every single database event. To handle migrations we
+first call: `php artisan migrate:install`. This will create a migration table to
+keep track of all migrations used. Every migration file that is made will
+contain a version number associated with a time stamp.
 
-To create a migration file in our database, we call: 
-`php artisan migrate:make create_developers_table`. Note how the command describes the action that our
-database will handle. Inside our CreateProjectsTable object, we have two methods: up and down. Up is what
-we will migrate to our database. Down is what action to take when we rollback. To rollback we
-call `php artisan migrate:rollback`.
+To create a migration file in our database, we call: `php artisan migrate:make
+create_developers_table`. Note how the command describes the action that our
+database will handle. Inside our CreateProjectsTable object, we have two
+methods: up and down. The up function is responsible for migrating columns to a
+designated table. Down is what action to take when we rollback.  call `php
+artisan migrate:rollback`.
 
 ```php
 <?php
