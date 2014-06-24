@@ -253,32 +253,32 @@ display it via Blade templating.
 
 class DevelopersController extends \BaseController {
 
-	/**
-	 * Display a listing of the developers
-	 * GET /developers
-	 *
-	 * @return Response
-	 */
-	public function index()
-	{
-		$developers = Developer::all();
-		return View::make('developers.index', compact('developers'));
-	}
+/**
+ * Display a listing of the developers
+ * GET /developers
+ *
+ * @return Response
+ */
+public function index()
+{
+	$developers = Developer::all();
+	return View::make('developers.index', compact('developers'));
+}
 ```
 
 Our second controller method will return a form that will allow us to create a
 new developer
 ```php
-	/**
-	 * Show the form for creating a new developer.
-	 * GET /developers/create
-	 *
-	 * @return Response
-	 */
-	public function create()
-	{
-		return View::make('developers.create');
-	}
+/**
+ * Show the form for creating a new developer.
+ * GET /developers/create
+ *
+ * @return Response
+ */
+public function create()
+{
+	return View::make('developers.create');
+}
 ```
 
 Our third controller method will create a new instance of the Developer model.
@@ -289,56 +289,56 @@ then stores the value as a new entity in the database. We clean our headers and
 redirect back to our developers index page.
 
 ```php
-	/**
-	 * Store a newly created developer in storage
-	 * POST /developers
-	 *
-	 * @return Response
-	 */
-	public function store()
-	{
-		$developer = new Developer;
-		$developer->first_name = Input::only("first_name");
-		$developer->last_name = Input::only("last_name");
-		$developer->save();
+/**
+ * Store a newly created developer in storage
+ * POST /developers
+ *
+ * @return Response
+ */
+public function store()
+{
+	$developer = new Developer;
+	$developer->first_name = Input::only("first_name");
+	$developer->last_name = Input::only("last_name");
+	$developer->save();
 
-		return Redirect::route('developers.index');
-	}
+	return Redirect::route('developers.index');
+}
 ```
 
 Alternatively, you may want to take advantage of Mass Assignment.
 The advantage of mass assignment is the ability to easily bind data to an
 entity --no matter the scale of inputs.
 ```php
-	 Developer::create(Input::all());
+Developer::create(Input::all());
 ```
 
 Be sure to create a blacklist or whitelist in your models to defend against Mass
 Assignment Vulnerability.
 ```php
-	<?php
+<?php
 
-	class Developer extends Eloquent {
-		protected $fillable = ['first_name', 'last_name'];
-	}
+class Developer extends Eloquent {
+	protected $fillable = ['first_name', 'last_name'];
+}
 ```
 
 Our fourth controller method will grab an identifier from our URI and use it as
 a parameter to find a developer and then return that specific developer to a
 view.
 ```php
-	/**
-	 * Display the specified developer.
-	 * GET /developers/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function show($id)
-	{
-		$developer = Developer::findOrFail($id);
-		return View::make('developers.show', compact('developer');
-	}
+/**
+ * Display the specified developer.
+ * GET /developers/{id}
+ *
+ * @param  int  $id
+ * @return Response
+ */
+public function show($id)
+{
+	$developer = Developer::findOrFail($id);
+	return View::make('developers.show', compact('developer');
+}
 ```
 
 Our fifth controller method will grab an identifier from our URI and specific
@@ -364,21 +364,21 @@ We can use form-model binding to bind a model's current instance
 variables to a form. That is, list the current values of a model in input tag
 values.
 ```php
-	@section('content')
-		{{ Form::model($developer, ['method' => 'PATCH', 'route' =>
-		['developers.update', $developer->id]]) }}
-			<div>
-				{{ Form::label('first_name', 'First Name:') }}
-				{{ Form::text('first_name') }}
-			</div>
-			<div>
-				{{ Form::label('last_name', 'Last Name:') }}
-				{{ Form::text('last_name') }}
-			</div>
-			<div>
-				{{ Form::submit('Update Developer') }}
-			</div>
-	@stop
+@section('content')
+	{{ Form::model($developer, ['method' => 'PATCH', 'route' =>
+	['developers.update', $developer->id]]) }}
+		<div>
+			{{ Form::label('first_name', 'First Name:') }}
+			{{ Form::text('first_name') }}
+		</div>
+		<div>
+			{{ Form::label('last_name', 'Last Name:') }}
+			{{ Form::text('last_name') }}
+		</div>
+		<div>
+			{{ Form::submit('Update Developer') }}
+		</div>
+@stop
 ```
 
 Our sixth controller method takes advantage of spoofing a PATCH action. That is
@@ -387,18 +387,18 @@ current developer object by grabbing a current model from persistence, fill-in
 the new attributes, and save them. Notice we redirect back using that original
 identifier, we can now view our changes immediately
 ```php
-	/**
-	 * Update the specified resource in storage.
-	 * PATCH /developers/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function update($id)
-	{
-		$developer = Developer::findOrFail($id);
-		$developer->fill(Input::all());
-		$developer->save();
+/**
+ * Update the specified resource in storage.
+ * PATCH /developers/{id}
+ *
+ * @param  int  $id
+ * @return Response
+ */
+public function update($id)
+{
+	$developer = Developer::findOrFail($id);
+	$developer->fill(Input::all());
+	$developer->save();
 
 		return Redirect::route('developers.show', ['id' => $id]);
 	}
@@ -408,19 +408,19 @@ first find the user base on their identity. Then we delete the entity from
 persistence. That simple. We redirect back to the developers index to see
 our current list of developers.
 ```php
-	/**
-	 * Remove the specified resource from storage.
-	 * DELETE /developers/{id}
-	 *
-	 * @param  int  $id
-	 * @return Response
-	 */
-	public function destroy($id)
-	{
-		$developer = Developer::findOrFail($id);
-		$developer->delete();
+/**
+ * Remove the specified resource from storage.
+ * DELETE /developers/{id}
+ *
+ * @param  int  $id
+ * @return Response
+ */
+public function destroy($id)
+{
+	$developer = Developer::findOrFail($id);
+	$developer->delete();
 
-		return Redirect::route('developers.index');
+	return Redirect::route('developers.index');
 	}
 ```
 
