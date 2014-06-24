@@ -11,6 +11,6 @@ Route::post('register', [
 
 // Or
 Route::post('register',
-    ["before" => "csrf", "Controller@postAction"]
+    ["before" => "csrf", "Controller@register"]
 );
 ```
