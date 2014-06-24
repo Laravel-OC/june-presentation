@@ -21,6 +21,7 @@ develop: concat serve
 
 snapshot: clean concat
 	php artisan snapshot GET / > dist/index.html
+	mkdir -pv dist/{js,css}
 	cp ${JS_DIST} dist/js/
 	cp ${CSS_DIST} dist/css/
 	cd ./dist && git add --all . && git commit -am "rebuilding presentation" && git push
