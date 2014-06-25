@@ -770,14 +770,15 @@ Presentation","developer_id":"1","due_date":"2014-07-04
 
 Quotes
 ------
+>Every class should have a single responsibility, and that responsibility should
+>be entirely encapsulated by the class.
+>
+> &mdash; <cite>Taylor Otwell</cite>
 
-*Every class should have a single responsibility, and that responsibility should
-be entirely encapsulated by the class.* --Taylor Otwell
-
-*"Dependency Injection" is a 25-dollar term for a 5-cent concept. [...]
-Dependency injection means giving an object its instance variables. [...].* -
-Martin Fowler
-
+>Dependency Injection" is a 25-dollar term for a 5-cent concept. [...]
+>Dependency injection means giving an object its instance variables. [...].
+>
+> &mdash; <cite>Martin Fowler</cite>
 
 Author Blurbs
 -------------
