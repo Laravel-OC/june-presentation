@@ -449,6 +449,92 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
             <article class="slide"><h2>The vanilla PHP way</h2>
 <pre><code class="language-php">die("nope.gif");</code></pre>
 <p><img alt="nope.gif" src="./img/nope_jack.gif" /></p></article>
+            <article class="slide"><h1>Templating</h1></article>
+            <article class="slide"><h2>The Laravel way</h2>
+<pre><code class="language-php">&lt;html lang='en'&gt;&lt;!-- app/views/master.php --&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;?= Section::yield("title") ?&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;?= Section::yield("content") ?&gt;
+    &lt;/div&gt;
+    &lt;?php if ($projects):
+        echo Section::yield("js");
+    endif; ?&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></article>
+            <article class="slide"><h2>The Laravel way (cont'd)</h2>
+<pre><code class="language-php">&lt;?php include __DIR__ . "/../master.php"; ?&gt;
+
+&lt;!-- start a new section, content --&gt;
+&lt;?php Section::startSection("content"); ?&gt;
+
+    regular php content goes here&lt;br&gt;
+
+    this will be rendered in the "master" template
+
+    the year is &lt;code&gt;&lt;?= date("Y") ?&gt;&lt;/code&gt;
+
+&lt;?php Section::stopSection("content"); ?&gt;</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way</h2>
+<pre><code class="language-php">&lt;html lang='en'&gt;&lt;!-- app/views/master.php --&gt;
+&lt;head&gt;
+    &lt;title&gt;&lt;?php echo $title; ?&gt;&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="container"&gt;
+        &lt;?php echo $content; ?&gt;
+    &lt;/div&gt;
+    &lt;?php if ($projects):
+        &lt;?php echo $js; ?&gt;
+    endif; ?&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
+<pre><code class="language-php">
+&lt;?php /* start output buffering */ ob_start(); ?&gt;
+    regular php content goes here
+    &lt;br&gt;
+    this will be rendered in the "master" template
+    &lt;br&gt;
+    the year is &lt;code&gt;&lt;?= date("Y") ?&gt;&lt;/code&gt;
+&lt;?php $content = ob_get_clean(); ?&gt;
+&lt;?php $title = "My Cool Title"; ?&gt;
+&lt;?php $projects = []; ?&gt;
+
+&lt;?php include __DIR__ . "/../master.php"; ?&gt;</code></pre></article>
+            <article class="slide"><h2>Problems with the vanilla way</h2>
+<ul>
+<li>End up mixing business login and display logic</li>
+<li>View files get very, very busy</li>
+<li>Hard to change variable names</li>
+<li>Multiple sections get unwieldy quickly</li>
+</ul></article>
+            <article class="slide"><h2>Other benefits Laravel provides</h2>
+<ul>
+    <li class="slide">
+        <h5>
+            View composers (always include certain variables with certain views)
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+            Automatic HTML escaping (XSS protection!)
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+            Subviews and view-level variable isolation
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+            View chains with optional overwrites or appends
+        </h5>
+    </li>
+</ul>
+</article>
     
             <p class="deck-status" aria-role="status">
                 <span class="deck-status-current"></span>
