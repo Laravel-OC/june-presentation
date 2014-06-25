@@ -1,8 +1,12 @@
+/* Match text highlight to Laravel Peach color */
+*::selection {
+  background-color: #FA7161;
+}
 /* make all these things the Laravel orange (taken from docs page, not logo) */
 h2,
 cite,
 a, a:link, a:visited  {
-  color: #e71818;
+  color: #FA7161;
 }
 
 /* make all these things black (taken from docs page, not logo) */
