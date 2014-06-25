@@ -1,8 +1,14 @@
 More options
------------
-- Rollback the last migration:
-  - `php artisan migrate:migrate`
-- Reset the entire database --nothing migrated:
-  - `php artisan migrate:reset`
-- Add a due date column to a projects table:
-  - `php artisan migrate:make add_due_dates_to_projects_table --table=projects`
+------------
+- Rollback the last migration
+  - Using `./artisan migrate:migrate`
+- Reset the entire database by rolling everything back
+  - `./artisan migrate:reset`
+- Add a `due_date` column to a projects table:
+  ```bash
+  ./artisan migrate:make \
+        `# the name of the migration` \
+        add_due_dates_to_projects_table \
+        `# the table to generate a migration for` \
+        --table=projects
+  ```
