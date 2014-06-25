@@ -1,5 +1,3 @@
-Super secret projects: developers only
---------------------------------------
 ```php
 public function store()
 {
