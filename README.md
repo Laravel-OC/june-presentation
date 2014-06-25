@@ -676,6 +676,69 @@ without effecting other portions of our application. This encourages
 polymorphism. An interface can have multiple implementations. In addition,
 Interfaces are helpful in the design phase of building a component.
 
+- [x] Artisan
+Artisan contains a number of useful commands to provide shortcuts or additional
+functionality to the framework. It is driven by the powerful Symfony Console
+component.
+
+A few helpful commands we will look at include: migrate, tinker, serve.
+To see all commands, just run `php artisan` from the root directory of your
+Laravel application. As you can see, there are a handful of commands with
+additional options to take advantage.
+
+The easiest way to create a migration in Laravel is to use the artisan migrate
+command. No longer are we subjected to building our schema manually. To create a
+migration for a projects table, we run: `php artisan migrate:make
+create_projects_table`. Laravel will generate a new migration template within the
+`app/database/migrations` directory. The file will be named after your command
+and a time stamp.
+
+After you have build your migration object with your bi-directional options.
+What goes up, must come down. It is now time to install a migration table to
+keep track of all your migrations in the database. We can do this with `php
+artisan migrate:install`. Now we are ready to run through our migrations,
+building each table and column as specified in our migrations folder. We can do
+so by calling `php artisan migrate`. And just like that, we have a version
+controlled database that keeps track of current tables.
+
+What if we wanted to rollback the last database migration? No problem, we call
+`php artisan migrate:rollback`.
+
+What if I want to reset the entire database so nothing was migrated? We can call
+`php artisan migrate:reset`.
+
+I want to add a due date column to the project's table. We can use the following
+command: `php artisan migrate:make add_due_dates_to_projects_table --table=projects
+
+Laravel offers a low-barrier to entry. However, there
+are times where you may want to interact with the framework and tinker with its
+components. Artisan's tinker command offers a REPL solution for testing and
+understanding your code. It truly allows you to interact with your application.
+To run tinker, just call: `php artisan tinker`
+
+Use Artisan tinker to test models and helper methods.
+```sh
+vagrant@homestead:~/code/june-presentation$ php artisan tinker
+[1] > $project = Project::first();
+// object(Project)(
+//   'incrementing' => true,
+//   'timestamps' => true,
+//   'exists' => true
+// )
+[2] > echo $project;
+{"id":"1","project_name":"Laravel
+Presentation","developer_id":"1","due_date":"2014-07-04
+07:14:36","created_at":"2014-06-25 07:14:36","updated_at":"2014-06-25
+07:14:36"}
+[3] > $project->updated_at;
+// object(Carbon\Carbon)(
+//   'date' => '2014-06-25 07:14:36',
+//   'timezone_type' => 3,
+//   'timezone' => 'UTC'
+// )
+```
+
+
 - [ ] Deployment process
 
 - [ ] Repeatable environments (Vagrant)
