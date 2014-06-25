@@ -25,17 +25,32 @@
 </ul></article>
             <article class="slide"><h2>Justin Page</h2>
 <ul>
-<li>PHP Developer for over 2 years -respect the Double Claw</li>
-<li>Obsessed with Mechanical Keyboards</li>
+<li>PHP Developer for over 2 years -respect the double claw</li>
+<li>Loves mechanical keyboards</li>
 <li>KLVTZ: Kangaroo League on a Vendetta for Terrifying Zebras?</li>
 </ul></article>
             <article class="slide"><h2>Today we're going to talk about...</h2>
 <ul>
+<li>The history of Laravel</li>
 <li>How to do some common tasks in Laravel</li>
 <li>How to do those tasks without Laravel</li>
 <li>Pitfalls for either approach</li>
+<li>Next steps in Laravel</li>
 </ul></article>
             <article class="slide"><h1>Let's get started</h1></article>
+            <article class="slide"><h1>A bit of history</h1></article>
+            <article class="slide"><h2>Laravel 4: PHP Framework for Web Artisans</h2>
+<ul>
+<li>Laravel was developed by Taylor Otwell</li>
+<li>Started in April 2011</li>
+<li>Over 1.57 million downloads from
+<a href="https://packagist.org/packages/laravel/framework">Packagist</a></li>
+<li>Combines the very best features of other web frameworks
+<ul>
+<li>Rails, ASP.NET, Sinatra, Symfony</li>
+</ul></li>
+<li>Red Panda: the official, unofficial mascot</li>
+</ul></article>
             <article class="slide"><h1>SQL and database access</h1></article>
             <article class="slide"><h2>The Laravel way</h2>
 <pre><code class="language-php">// connections
@@ -97,6 +112,22 @@ WHERE due_date &lt; ":due_date"</code></pre>
 <li>Hard to change DB table prefixes</li>
 <li>Remember to check <code>errorInfo</code> every time</li>
 </ul></article>
+            <article class="slide"><h2>SQL joins: Laravel Way</h2>
+<pre><code class="language-php">DB::table('developers')
+    -&gt;select('developers.first_name', 'projects.project_name')
+    -&gt;join('projects', 'developers.id', '=', 'projects.developer_id')
+    -&gt;where('projects.due_date', '&lt;', '2015-01-01 00:00:00')
+    -&gt;orderBy('projects.due_date', 'ASC')
+    -&gt;get();</code></pre></article>
+            <article class="slide"><h2>SQL joins: Vanilla Way</h2>
+<pre><code class="language-php">SELECT
+    first_name,
+    project_name,
+FROM developers
+INNER JOIN projects
+    ON developers.id = developer_id
+WHERE due_date &lt; '2015-01-01 00:00:00'
+ORDER BY due_date ASC;</code></pre></article>
             <article class="slide"><h1>Retrieving records from a database</h1></article>
             <article class="slide"><h2>The Laravel way</h2>
 <pre><code class="language-php">class User extends Eloquent
@@ -531,6 +562,174 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
     <li class="slide">
         <h5>
             View chains with optional overwrites or appends
+        </h5>
+    </li>
+</ul>
+</article>
+            <article class="slide"><h1>Migrations</h1></article>
+            <article class="slide"><h2>Getting started</h2>
+<ul>
+<li>Setup your default database connection:
+<ul>
+<li><em>app/config/database.php</em></li>
+</ul></li>
+<li>Install migration table to keep track of migrations:
+<ul>
+<li><code>php artisan migrate:install</code></li>
+</ul></li>
+<li>Create a migration for a project table:
+<ul>
+<li><code>php artisan migrate:make create_projects_table</code></li>
+<li>Generates all migrations to <em>app/database/migrations</em></li>
+</ul></li>
+<li>Organized by times stamp and migration action
+<ul>
+<li><em>2014_06_23_073419_create_developers_table.php</em> </li>
+</ul></li>
+</ul></article>
+            <article class="slide"><h2>What goes up...</h2>
+<pre><code class="language-php">&lt;?php
+    public function up()
+    {
+        Schema::create('projects', function(Blueprint $table)
+        {
+            $table-&gt;increments('id');
+            $table-&gt;string('project_name')-&gt;unique;
+            $table-&gt;string('developer_id');
+            $table-&gt;dateTime('due_date');
+            $table-&gt;timestamps();
+        });
+    }
+}</code></pre></article>
+            <article class="slide"><h2>...must come down.</h2>
+<pre><code class="language-php">    public function down()
+    {
+        Schema::drop('projects');
+    }</code></pre></article>
+            <article class="slide"><h2>More options</h2>
+<ul>
+<li>Rollback the last migration:
+<ul>
+<li><code>php artisan migrate:migrate</code></li>
+</ul></li>
+<li>Reset the entire database --nothing migrated:
+<ul>
+<li><code>php artisan migrate:reset</code></li>
+</ul></li>
+<li>Add a due date column to a projects table:
+<ul>
+<li><code>php artisan migrate:make add_due_dates_to_projects_table --table=projects</code></li>
+</ul></li>
+</ul></article>
+            <article class="slide"><h2>Benefits of Migrations</h2>
+<ul>
+    <li class="slide">
+        <h5>
+           Version Control your database
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+           Freedom to add and remove columns while maintaining control 
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+           Smooth transition to production environment 
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+           Portable and transparent 
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+          Automatic database seeding
+        </h5>
+    </li>
+</ul>
+</article>
+            <article class="slide"><h1>Simple CRUD using REST</h1></article>
+            <article class="slide"><h2>Getting started</h2>
+<ul>
+<li>Setup your default database connection:
+<ul>
+<li><em>app/config/database.php</em></li>
+</ul></li>
+<li>Install migration table to keep track of migrations:
+<ul>
+<li><code>php artisan migrate:install</code></li>
+</ul></li>
+<li>Create a migration for a project table:
+<ul>
+<li><code>php artisan migrate:make create_projects_table</code></li>
+<li>Generates all migrations to <em>app/database/migrations</em></li>
+</ul></li>
+<li>Organized by times stamp and migration action
+<ul>
+<li><em>2014_06_23_073419_create_developers_table.php</em> </li>
+</ul></li>
+</ul></article>
+            <article class="slide"><h2>What goes up...</h2>
+<pre><code class="language-php">&lt;?php
+    public function up()
+    {
+        Schema::create('projects', function(Blueprint $table)
+        {
+            $table-&gt;increments('id');
+            $table-&gt;string('project_name')-&gt;unique;
+            $table-&gt;string('developer_id');
+            $table-&gt;dateTime('due_date');
+            $table-&gt;timestamps();
+        });
+    }
+}</code></pre></article>
+            <article class="slide"><h2>...must come down.</h2>
+<pre><code class="language-php">    public function down()
+    {
+        Schema::drop('projects');
+    }</code></pre></article>
+            <article class="slide"><h2>More options</h2>
+<ul>
+<li>Rollback the last migration:
+<ul>
+<li><code>php artisan migrate:migrate</code></li>
+</ul></li>
+<li>Reset the entire database --nothing migrated:
+<ul>
+<li><code>php artisan migrate:reset</code></li>
+</ul></li>
+<li>Add a due date column to a projects table:
+<ul>
+<li><code>php artisan migrate:make add_due_dates_to_projects_table --table=projects</code></li>
+</ul></li>
+</ul></article>
+            <article class="slide"><h2>Benefits of Migrations</h2>
+<ul>
+    <li class="slide">
+        <h5>
+           Version Control your database
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+           Freedom to add and remove columns while maintaining control 
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+           Smooth transition to production environment 
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+           Portable and transparent 
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+          Automatic database seeding
         </h5>
     </li>
 </ul>

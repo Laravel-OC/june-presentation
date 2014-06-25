@@ -765,11 +765,15 @@ pre.line-numbers > code {
 			text-align: right;
 		}
 
+/* Match text highlight to Laravel Peach color */
+*::selection {
+  background-color: #FA7161;
+}
 /* make all these things the Laravel orange (taken from docs page, not logo) */
 h2,
 cite,
 a, a:link, a:visited  {
-  color: #e71818;
+  color: #FA7161;
 }
 
 /* make all these things black (taken from docs page, not logo) */
@@ -780,10 +784,15 @@ h1,
 }
 
 /* h2s were too small and had a weird border color */
+pre {
+  margin: .25em 0;
+}
+
 h2 {
   color: #FA7161;
   font-size: 1.5em;
   border-bottom: none;
+  margin:0;
 }
 
 h1 {
