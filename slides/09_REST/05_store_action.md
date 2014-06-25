@@ -1,14 +1,16 @@
 Store a newly created developer in storage
------------------------------------------
+------------------------------------------
 ```php
 public function store()
 {
-	$developer = new developer;
-	$developer->first_name = input::only("first_name");
-	$developer->last_name = input::only("last_name");
-	$developer->save();
+    $dev = new developer;
 
-	return redirect::route('developers.index');
+    $dev->first_name = input::only("first_name");
+    $dev->last_name  = input::only("last_name");
+
+    $dev->save();
+
+    return redirect::route('developers.index');
 }
 ```
 

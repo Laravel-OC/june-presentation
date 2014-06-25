@@ -3,9 +3,10 @@ Remove specified resource from storage
 ```php
 public function destroy($id)
 {
-	$developer = Developer::findOrFail($id);
-	$developer->delete();
+    $dev = Developer::findOrFail($id);
 
-	return Redirect::route('developers.index');
-	}
+    $dev->delete();
+
+    return Redirect::route('developers.index');
+}
 ```

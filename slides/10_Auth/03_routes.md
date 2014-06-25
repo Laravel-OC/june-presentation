@@ -6,8 +6,7 @@ Route::get('logout', 'SessionsController@destroy');
 
 Route::resource('sessions', 'SessionsController');
 
-Route::get('projects', function()
-{
-	return 'List of Super Secret Projects';
+Route::get('projects', function() {
+    return 'List of Super Secret Projects';
 })->before('auth');
 ```

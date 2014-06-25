@@ -1,12 +1,20 @@
 Update the specified resource in storage
----------------------------------------
+----------------------------------------
 ```php
 public function update($id)
 {
-	$developer = Developer::findOrFail($id);
-	$developer->fill(Input::all());
-	$developer->save();
+    $dev = Developer::findOrFail($id);
 
-		return Redirect::route('developers.show', ['id' => $id]);
-	}
+    $dev->fill(Input::all());
+
+    try {
+        $dev->save();
+    } catch (Exception $e) {
+        Log::error($e);
+
+        Redirect::to("developers.error");
+    }
+
+    return Redirect::route('developers.show', ['id' => $id]);
+}
 ```
