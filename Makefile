@@ -21,7 +21,7 @@ develop: concat serve
 
 snapshot: clean concat
 	php artisan snapshot GET / > dist/index.html
-	mkdir -pv dist/{js,css,img}
+	mkdir -pv dist/js dist/css dist/img
 	cp ${JS_DIST} dist/js/
 	cp ${CSS_DIST} dist/css/
 	cp public/img/* dist/img/
