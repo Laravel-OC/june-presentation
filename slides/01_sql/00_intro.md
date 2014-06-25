@@ -1,2 +1,2 @@
-Retrieving records from a database
-----------------------------------
+SQL and database access
+=======================
