@@ -2,13 +2,17 @@ The vanilla PHP way (cont'd)
 ----------------------------
 ```php
 <?php /* start output buffering */ ob_start(); ?>
-    regular php content goes here
-    <br>
-    this will be rendered in the "master" template
-    <br>
-    the year is <code><?= date("Y") ?></code>
-<?php $content = ob_get_clean(); ?>
-<?php $title = "My Cool Title"; ?>
-<?php $projects = []; ?>
+Nothing magic here! Everything gets rendered in
+the master template above. You get access to all
+the things you'd normally have access to. See?
 
-<?php include __DIR__ . "/../master.php"; ?>
+The year is: <?= date("Y") ?>
+
+<?php
+
+$content  = ob_get_clean();
+$title    = "My Cool Title";
+$projects = [];
+
+include __DIR__ . "/../master.php";
+```

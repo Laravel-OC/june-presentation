@@ -9,9 +9,9 @@ The Laravel way
     <div class="container">
         <?= Section::yield("content") ?>
     </div>
-    <?php if ($projects):
-        echo Section::yield("js");
-    endif; ?>
+    <?php if ($projects): ?>
+        <?= Section::yield("js") ?>
+    <?php endif; ?>
 </body>
 </html>
 ```
