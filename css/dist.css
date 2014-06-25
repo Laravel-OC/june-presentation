@@ -769,19 +769,28 @@ pre.line-numbers > code {
 h2,
 cite,
 a, a:link, a:visited  {
-    color: #e71818;
+  color: #e71818;
 }
 
 /* make all these things black (taken from docs page, not logo) */
 body,
 h1,
 .deck-container {
-    color: #444;
+  color: #444;
 }
 
 /* h2s were too small and had a weird border color */
 h2 {
-    font-size: 42pt;
-    border-bottom-color: #e3e3e3;
+  color: #FA7161;
+  font-size: 1.5em;
+  border-bottom: none;
+}
+
+h1 {
+  font-size: 2.5em;
+}
+
+#slide-0 h1 strong {
+  color: #FA7161
 }
 
