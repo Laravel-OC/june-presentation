@@ -334,13 +334,6 @@ current developer object by grabbing a current model from persistence, fill-in
 the new attributes, and save them. Notice we redirect back using that original
 identifier, we can now view our changes immediately
 ```php
-/**
- * Update the specified resource in storage.
- * PATCH /developers/{id}
- *
- * @param  int  $id
- * @return Response
- */
 public function update($id)
 {
 	$developer = Developer::findOrFail($id);
@@ -355,12 +348,6 @@ first find the user base on their identity. Then we delete the entity from
 persistence. That simple. We redirect back to the developers index to see
 our current list of developers.
 ```php
-/**
- * Remove the specified resource from storage.
- * DELETE /developers/{id}
- *
- * @param  int  $id
- * @return Response
  */
 public function destroy($id)
 {
