@@ -13,5 +13,5 @@ $conn->prepare($query)->execute(
     [":due_date" => "2015-01-01 00:00:00"]
 );
 
-do_something_with($prep->errorInfo());
+do_something_with_these_errors($prep->errorInfo());
 ```
