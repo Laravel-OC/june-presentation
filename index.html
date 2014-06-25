@@ -38,19 +38,19 @@
 <li>Next steps in Laravel</li>
 </ul></article>
             <article class="slide"><h1>Let's get started</h1></article>
-            <article class="slide"><h1>A bit of history</h1></article>
-            <article class="slide"><h2>Laravel 4: PHP Framework for Web Artisans</h2>
+            <article class="slide"><h1>But first, a bit of history</h1></article>
+            <article class="slide"><h2>Laravel 4: A PHP Framework for Web Artisans</h2>
 <ul>
-<li>Laravel was developed by Taylor Otwell</li>
+<li>Developed by Taylor Otwell</li>
 <li>Started in April 2011</li>
-<li>Over 1.57 million downloads from
-<a href="https://packagist.org/packages/laravel/framework">Packagist</a></li>
-<li>Combines the very best features of other web frameworks
+<li>Over 1.57 million downloads from <a href="https://packagist.org/packages/laravel/framework">Packagist</a> (so far)</li>
+<li>Combines the very best features of other web frameworks and languages
 <ul>
 <li>Rails, ASP.NET, Sinatra, Symfony</li>
 </ul></li>
 <li>Red Panda: the official, unofficial mascot</li>
 </ul></article>
+            <article class="slide"><h1>Okay, enough history <br> what about the features?!</h1></article>
             <article class="slide"><h1>SQL and database access</h1></article>
             <article class="slide"><h2>The Laravel way</h2>
 <pre><code class="language-php">// connections
@@ -98,7 +98,7 @@ $conn-&gt;prepare($query)-&gt;execute(
     [":due_date" =&gt; "2015-01-01 00:00:00"]
 );
 
-do_something_with($prep-&gt;errorInfo());</code></pre></article>
+do_something_with_these_errors($prep-&gt;errorInfo());</code></pre></article>
             <article class="slide"><h2>Problems with the vanilla way</h2>
 <ul>
 <li>Hard to pass around the PDO connection</li>
@@ -112,22 +112,38 @@ WHERE due_date &lt; ":due_date"</code></pre>
 <li>Hard to change DB table prefixes</li>
 <li>Remember to check <code>errorInfo</code> every time</li>
 </ul></article>
-            <article class="slide"><h2>SQL joins: Laravel Way</h2>
+            <article class="slide"><h1>SQL joins</h1></article>
+            <article class="slide"><h2>The Laravel way</h2>
 <pre><code class="language-php">DB::table('developers')
+    // select these columns
     -&gt;select('developers.first_name', 'projects.project_name')
+    // LEFT JOIN projects ON developers.id = projects.developer_id
     -&gt;join('projects', 'developers.id', '=', 'projects.developer_id')
-    -&gt;where('projects.due_date', '&lt;', '2015-01-01 00:00:00')
+    // add any number of conditions
+    -&gt;where('projects.due_date', '&lt;', $due_date)
+    -&gt;whereNull('projects.completed_at')
+    // arbritrary clauses
     -&gt;orderBy('projects.due_date', 'ASC')
+    // limit by X
+    -&gt;take($limit)
+    // perform the query
     -&gt;get();</code></pre></article>
-            <article class="slide"><h2>SQL joins: Vanilla Way</h2>
-<pre><code class="language-php">SELECT
-    first_name,
-    project_name,
-FROM developers
-INNER JOIN projects
-    ON developers.id = developer_id
-WHERE due_date &lt; '2015-01-01 00:00:00'
-ORDER BY due_date ASC;</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way</h2>
+<pre><code class="language-php">$query = &lt;&lt;&lt;QUERY
+    SELECT first_name, project_name
+    FROM developers
+    INNER JOIN projects
+        ON developers.id = developer_id
+    WHERE due_date &lt; ':due_date'
+    ORDER BY due_date ASC
+    LIMIT :limit
+QUERY;
+
+$conn-&gt;prepare($query)-&gt;execute(
+    [":due_date" =&gt; $due_date, ":limit" =&gt; $limit]
+);
+
+do_something_with_these_errors($prep-&gt;errorInfo());</code></pre></article>
             <article class="slide"><h1>Retrieving records from a database</h1></article>
             <article class="slide"><h2>The Laravel way</h2>
 <pre><code class="language-php">class User extends Eloquent
@@ -588,24 +604,22 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
 </ul></li>
 </ul></article>
             <article class="slide"><h2>What goes up...</h2>
-<pre><code class="language-php">&lt;?php
-    public function up()
+<pre><code class="language-php">public function up()
+{
+    Schema::create('projects', function(Blueprint $table)
     {
-        Schema::create('projects', function(Blueprint $table)
-        {
-            $table-&gt;increments('id');
-            $table-&gt;string('project_name')-&gt;unique;
-            $table-&gt;string('developer_id');
-            $table-&gt;dateTime('due_date');
-            $table-&gt;timestamps();
-        });
-    }
+        $table-&gt;increments('id');
+        $table-&gt;string('project_name')-&gt;unique;
+        $table-&gt;string('developer_id');
+        $table-&gt;dateTime('due_date');
+        $table-&gt;timestamps();
+    });
 }</code></pre></article>
             <article class="slide"><h2>...must come down.</h2>
-<pre><code class="language-php">    public function down()
-    {
-        Schema::drop('projects');
-    }</code></pre></article>
+<pre><code class="language-php">public function down()
+{
+    Schema::drop('projects');
+}</code></pre></article>
             <article class="slide"><h2>More options</h2>
 <ul>
 <li>Rollback the last migration:
@@ -630,17 +644,17 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
     </li>
     <li class="slide">
         <h5>
-           Freedom to add and remove columns while maintaining control 
+           Freedom to add and remove columns while maintaining control
         </h5>
     </li>
     <li class="slide">
         <h5>
-           Smooth transition to production environment 
+           Smooth transition to production environment
         </h5>
     </li>
     <li class="slide">
         <h5>
-           Portable and transparent 
+           Portable and transparent
         </h5>
     </li>
     <li class="slide">
@@ -651,89 +665,134 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
 </ul>
 </article>
             <article class="slide"><h1>Simple CRUD using REST</h1></article>
-            <article class="slide"><h2>Getting started</h2>
-<ul>
-<li>Setup your default database connection:
-<ul>
-<li><em>app/config/database.php</em></li>
-</ul></li>
-<li>Install migration table to keep track of migrations:
-<ul>
-<li><code>php artisan migrate:install</code></li>
-</ul></li>
-<li>Create a migration for a project table:
-<ul>
-<li><code>php artisan migrate:make create_projects_table</code></li>
-<li>Generates all migrations to <em>app/database/migrations</em></li>
-</ul></li>
-<li>Organized by times stamp and migration action
-<ul>
-<li><em>2014_06_23_073419_create_developers_table.php</em> </li>
-</ul></li>
-</ul></article>
-            <article class="slide"><h2>What goes up...</h2>
-<pre><code class="language-php">&lt;?php
-    public function up()
-    {
-        Schema::create('projects', function(Blueprint $table)
-        {
-            $table-&gt;increments('id');
-            $table-&gt;string('project_name')-&gt;unique;
-            $table-&gt;string('developer_id');
-            $table-&gt;dateTime('due_date');
-            $table-&gt;timestamps();
-        });
-    }
-}</code></pre></article>
-            <article class="slide"><h2>...must come down.</h2>
-<pre><code class="language-php">    public function down()
-    {
-        Schema::drop('projects');
-    }</code></pre></article>
-            <article class="slide"><h2>More options</h2>
-<ul>
-<li>Rollback the last migration:
-<ul>
-<li><code>php artisan migrate:migrate</code></li>
-</ul></li>
-<li>Reset the entire database --nothing migrated:
-<ul>
-<li><code>php artisan migrate:reset</code></li>
-</ul></li>
-<li>Add a due date column to a projects table:
-<ul>
-<li><code>php artisan migrate:make add_due_dates_to_projects_table --table=projects</code></li>
-</ul></li>
-</ul></article>
-            <article class="slide"><h2>Benefits of Migrations</h2>
+            <article class="slide"><h2>Why REST?</h2>
 <ul>
     <li class="slide">
         <h5>
-           Version Control your database
+           Clean your URI request into clean and understandable elements
         </h5>
     </li>
     <li class="slide">
         <h5>
-           Freedom to add and remove columns while maintaining control 
+          Allows you to create, read, update, and delete data 
         </h5>
     </li>
     <li class="slide">
         <h5>
-           Smooth transition to production environment 
-        </h5>
-    </li>
-    <li class="slide">
-        <h5>
-           Portable and transparent 
-        </h5>
-    </li>
-    <li class="slide">
-        <h5>
-          Automatic database seeding
+          CRUD is used within REST to persist the database in response 
         </h5>
     </li>
 </ul>
 </article>
+            <article class="slide"><h2>Register a route resource</h2>
+<pre><code class="language-php">Route::resource('developers', 'DevelopersController');</code></pre>
+<ul>
+<li>Wait, what resources? </li>
+</ul></article>
+            <article class="slide"><h2>Display a listing of the developers</h2>
+<pre><code class="language-php">&lt;?php
+
+class DevelopersController extends \BaseController {
+
+public function index()
+{
+    $developers = Developer::all();
+    return View::make('developers.index', compact('developers'));
+}</code></pre></article>
+            <article class="slide"><h2>Show form for creating a new developer</h2>
+<pre><code class="language-php">&lt;?php
+
+class DevelopersController extends \BaseController {
+
+public function index()
+{
+    $developers = Developer::all();
+    return View::make('developers.index', compact('developers'));
+}</code></pre></article>
+            <article class="slide"><h2>Store a newly created developer in storage</h2>
+<pre><code class="language-php">public function store()
+{
+    $developer = new developer;
+    $developer-&gt;first_name = input::only("first_name");
+    $developer-&gt;last_name = input::only("last_name");
+    $developer-&gt;save();
+
+    return redirect::route('developers.index');
+}</code></pre></article>
+            <article class="slide"><h2>You may want to take advantage of Mass Assignment</h2>
+<pre><code class="language-php">public function store()
+{
+    Developer::create(Input::all());
+    return redirect::route('developers.index');
+}</code></pre>
+<p>Guard against MA vulnerability with whitelist</p>
+<pre><code class="language-php">&lt;?php
+
+class Developer extends Eloquent {
+    protected $fillable = ['first_name', 'last_name'];
+}</code></pre></article>
+            <article class="slide"><h2>Display the specified developer</h2>
+<pre><code class="language-php">public function show($id)
+{
+    $developer = Developer::findOrFail($id);
+    return View::make('developers.show', compact('developer');
+}</code></pre></article>
+            <article class="slide"><h2>Show the form for editing a developer</h2>
+<pre><code class="language-php">public function edit($id)
+{
+    $developer = Developer::findOrFail($id);
+    return View::make('developers.edit', compact('developer');
+}</code></pre></article>
+            <article class="slide"><h2>Use form-model binding</h2>
+<ul>
+<li>Bind a model's current instance variables to a form</li>
+<li>List the current values of a model in input tags
+<pre><code class="language-php">@section('content')
+{{ Form::model($developer, ['method' =&gt; 'PATCH', 'route' =&gt;
+['developers.update', $developer-&gt;id]]) }}
+    &lt;div&gt;
+        {{ Form::label('first_name', 'First Name:') }}
+        {{ Form::text('first_name') }}
+    &lt;/div&gt;
+    &lt;div&gt;
+        {{ Form::label('last_name', 'Last Name:') }}
+        {{ Form::text('last_name') }}
+    &lt;/div&gt;
+    &lt;div&gt;
+        {{ Form::submit('Update Developer') }}
+    &lt;/div&gt;
+@stop</code></pre></li>
+</ul></article>
+            <article class="slide"><h2>Update the specified resource in storage</h2>
+<pre><code class="language-php">public function update($id)
+{
+    $developer = Developer::findOrFail($id);
+    $developer-&gt;fill(Input::all());
+    $developer-&gt;save();
+
+        return Redirect::route('developers.show', ['id' =&gt; $id]);
+    }</code></pre></article>
+            <article class="slide"><h2>Remove specified resource from storage</h2>
+<pre><code class="language-php">public function destroy($id)
+{
+    $developer = Developer::findOrFail($id);
+    $developer-&gt;delete();
+
+    return Redirect::route('developers.index');
+    }</code></pre></article>
+            <article class="slide"><h2>Different ways to Redirect</h2>
+<ul>
+<li>A redirect is a special type of response object which redirects the flow of
+the application to another route</li>
+</ul>
+<pre><code class="language-php">// Redirect to a route
+return Redirect::to('developer/login');
+
+// Redirect to a named route
+return Redirect::to('login');
+
+// Redirect to a Controller action
+return Redirect::action('DevelopersController@index');</code></pre></article>
     
             <p class="deck-status" aria-role="status">
                 <span class="deck-status-current"></span>
