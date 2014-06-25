@@ -677,6 +677,7 @@ polymorphism. An interface can have multiple implementations. In addition,
 Interfaces are helpful in the design phase of building a component.
 
 - [x] Artisan
+
 Artisan contains a number of useful commands to provide shortcuts or additional
 functionality to the framework. It is driven by the powerful Symfony Console
 component.
