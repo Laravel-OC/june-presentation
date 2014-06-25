@@ -830,14 +830,15 @@ Laravel.
 
 Quotes
 ------
+>Every class should have a single responsibility, and that responsibility should
+>be entirely encapsulated by the class.
+>
+> &mdash; <cite>Taylor Otwell</cite>
 
-*Every class should have a single responsibility, and that responsibility should
-be entirely encapsulated by the class.* --Taylor Otwell
-
-*"Dependency Injection" is a 25-dollar term for a 5-cent concept. [...]
-Dependency injection means giving an object its instance variables. [...].* -
-Martin Fowler
-
+>Dependency Injection" is a 25-dollar term for a 5-cent concept. [...]
+>Dependency injection means giving an object its instance variables. [...].
+>
+> &mdash; <cite>Martin Fowler</cite>
 
 Author Blurbs
 -------------
@@ -846,9 +847,9 @@ coding guidelines, and more database management tools than you can shake a stick
 at. Laravel, especially, seems to be one of the biggest trends in PHP right now.
 But what benefit does this new framework actually bring to the table?
 
-Your hosts Ciaran Downey, Justin Page, and Benjamin Walters will be discussing
-some of the common problems that you as a developer might experience and how to
-solve them both within a framework like Laravel and in vanilla PHP.
+Your hosts Ciaran Downey and Justin Page will be discussing some of the common
+problems that you as a developer might experience and how to solve them both
+within a framework like Laravel and in vanilla PHP.
 
 Ciaran Downey has been developing in PHP for over 3 years, and he's only had 2
 brain aneurysms in that whole time. He occasionally blogs at ciarand.me and
@@ -857,9 +858,3 @@ frequently codes at github.com/ciarand.
 Justin Page (@KLVTZ on both Twitter and GitHub) is a passionate student of PHP,
 always willing to learn and share that knowledge with others. He's currently
 earning his Computer Science degree at UCI.
-
-Benjamin Walters is an PHP wizard, trained in the dark arts of regex, master of
-the soul crushing monotony that is C++, and too engrossed in learning the
-secrets of the universe and PHP to write his own bio or blog at
-blog.benjaminwalters.net.
-
