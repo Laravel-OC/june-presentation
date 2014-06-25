@@ -13,10 +13,15 @@ h1,
 }
 
 /* h2s were too small and had a weird border color */
+pre {
+  margin: .25em 0;
+}
+
 h2 {
   color: #FA7161;
   font-size: 1.5em;
   border-bottom: none;
+  margin:0;
 }
 
 h1 {
