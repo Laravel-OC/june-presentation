@@ -110,7 +110,7 @@ echo $diff->format("%y years, %m months, %d days");
 ```
 
 ```php
-// laravel
+// Laravel
 echo Carbon::now()->diffForHumans(Carbon::parse("July 4th, 2014"));
 ```
 
@@ -577,6 +577,105 @@ With a few basic methods, the Auth facade offers an easy and natural way to
 authenticate user. No longer do you have to concern yourself with writing an
 authentication module for your users. Like many things in Laravel, it just works.
 
+- [x] The IoC Container and Dependency Injection
+
+To really thrive as a Laravel Developer, it's important to know about
+Laravel's IoC Container and how it allows us to more easily use Dependency
+Injection.
+
+The Inversion of Control container is a powerful tool for managing class
+dependencies. These dependencies allow the developer to easily bind an interface
+to a concrete example and thus manage class dependencies. At it's most simple
+term, it defines how our application should implement a class or interface. As
+Taylor Otwell expressed, "an IoC container is simply a convenience mechanism for
+achieving the software design pattern: dependency injection.
+
+Laravel's Illuminate\Foundation\Application class ties all of Laravel together.
+It offers us the ability to access our class with attributes and methods like an
+array. In turn, this flexibility is what allows for Illuminate packages to interact
+with each other.
+
+Why should we use Dependency Injection? If we look at an earlier example:
+```php
+class DevelopersController extends \BaseController {
+
+/**
+ * Display a listing of the developers
+ * GET /developers
+ *
+ * @return Response
+ */
+public function index()
+{
+	$developers = Developer::all();
+	return View::make('developers.index', compact('developers'));
+}
+```
+While this code is concise, we are unable to test it without hitting the
+database. In other words, the Eloquent ORM is tightly coupled to our controller.
+We have no way to use or test this controller without also using the entire
+Eloquent ORM. This code also violates Single Responsibility. Our controller
+knows too much! Controller do not need to know where data comes from, but only
+how to access it. That is why its an HTTP transport layer, not the force behind
+persistence. The controller does not have to know that the data is available via
+MySQL, but only that is available somewhere.
+
+The bulk of a monitor's functionality is independent of the cable. The cable is
+just a transport mechanism like HTTP is a transport mechanism for your
+applications. We don't want clutter our controller with application logic.
+
+To solve this problem, we will use dependency injection with the aid of the
+Inversion of Control container:
+
+```php
+interface DeveloperRepositoryInterface
+{
+	public function all();
+}
+
+class DBDeveloperRepository implements DeveloperRepositoryInterface
+{
+	protected function all()
+	{
+		return Developer::all();
+	}
+}
+
+class DevelopersController extends \BaseController {
+
+	protected $developers;
+
+	public function __construct(DeveloperRepositoryInterface $developers)
+	{
+		$this->developers = $developers;
+	}
+
+	public function index()
+	{
+		$developers = $this->developers->all();
+		return View::make('developers.index', compact('developers'));
+	}
+}
+
+App::bind('OC\Repositories\DeveloperRepositoryInterface',
+	'OC\Repositories\DBDeveloperRepository');
+
+// Sometimes you may wish to resolve only one instance of a given class
+// throughout your entire application.
+
+App::singleton('OC\Repositories\DeveloperRepositoryInterface',
+'OC\Repositories\DBDeveloperRepository');
+
+// Or you may wish to pass through an already existing instance
+App::singleton('OC\Repositories\DeveloperRepositoryInterface', $developer);
+```
+Why would we want to specify an interface as a dependency instead of a concrete
+example? We want to because any class dependency given to the constructor to be
+a subclass of an interface. In this way, we can change implementation at will
+without effecting other portions of our application. This encourages
+polymorphism. An interface can have multiple implementations. In addition,
+Interfaces are helpful in the design phase of building a component.
+
 - [ ] Deployment process
 
 - [ ] Repeatable environments (Vagrant)
@@ -604,6 +703,16 @@ authentication module for your users. Like many things in Laravel, it just works
 - [ ] Laravel Resources and the Community
 
 - [ ] Laravel as your first ever PHP framework
+
+Quotes
+------
+
+*Every class should have a single responsibility, and that responsibility should
+be entirely encapsulated by the class.* --Taylor Otwell
+
+*"Dependency Injection" is a 25-dollar term for a 5-cent concept. [...]
+Dependency injection means giving an object its instance variables. [...].* -
+Martin Fowler
 
 
 Author Blurbs
