@@ -1,6 +1,5 @@
 Getting started
 ---------------
-
 - Setup your default database connection:
   - *app/config/database.php*
 - Install migration table to keep track of migrations:

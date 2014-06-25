@@ -1,8 +1,8 @@
 ...must come down.
 ---------------------------
 ```php
-    public function down()
-    {
-        Schema::drop('projects');
-    }
+public function down()
+{
+    Schema::drop('projects');
+}
 ```
