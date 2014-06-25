@@ -3,15 +3,15 @@ The vanilla PHP way
 ```php
 <html lang='en'><!-- app/views/master.php -->
 <head>
-    <title><?php echo $title; ?></title>
+    <title><?= $title ?></title>
 </head>
 <body>
     <div class="container">
-        <?php echo $content; ?>
+        <?= $content ?>
     </div>
-    <?php if ($projects):
-        <?php echo $js; ?>
-    endif; ?>
+    <?php if ($projects): ?>
+        <?= $js ?>
+    <?php endif; ?>
 </body>
 </html>
 ```

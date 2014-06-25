@@ -1,16 +1,18 @@
 The Laravel way (cont'd)
 ------------------------
 ```php
-<?php include __DIR__ . "/../master.php"; ?>
+<?php include __DIR__ . "/../master.php";
+// include the master template
 
-<!-- start a new section, content -->
-<?php Section::startSection("content"); ?>
+// start a new section called "content"
+Section::startSection("content"); ?>
 
-    regular php content goes here<br>
+Nothing magic here! Everything gets rendered in
+the master template above. You get access to all
+the things you'd normally have access to. See?
 
-    this will be rendered in the "master" template
+The year is: <?= date("Y") ?>
 
-    the year is <code><?= date("Y") ?></code>
-
-<?php Section::stopSection("content"); ?>
+<?php // and just stop the section when you're done
+Section::stopSection("content");
 ```
