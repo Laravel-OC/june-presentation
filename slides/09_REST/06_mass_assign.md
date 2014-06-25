@@ -12,7 +12,8 @@ public function store()
 Guard against mass assignment vulnerability with a whitelist
 
 ```php
-class Developer extends Eloquent {
+class Developer extends Eloquent
+{
     protected $fillable = ['first_name', 'last_name'];
 }
 ```
