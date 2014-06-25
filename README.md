@@ -739,6 +739,66 @@ Presentation","developer_id":"1","due_date":"2014-07-04
 // )
 ```
 
+- [x] Learning Laravel
+
+Perhaps one of the strongest aspects of the Laravel is its own community of
+developers. I can't stress how many times I needed help with some aspect of
+Laravel or PHP development, and the community was right there, ready to help. If
+you are serious about delving into the world of Laravel and improving your PHP
+experience, this community rocks!
+
+Your first go-to resource for learning laravel is its documentation:
+[Laravel Docs](http://laravel.com/docs). Now, If we can be a bit bias, the
+documentation is very clean. In many ways, it reflects Laravel's expressive,
+elegant syntax. I find myself constantly going back to the documentation for
+clarification and updates on the latest Laravel release. If you need API
+information on Laravel and its components, check out the newly released,
+searchable documentation, from [devdocs](http://devdocs.io/laravel/). The
+biggest benefit using devdocs is that you'll find hidden gems and features from
+within the properties of these many Objects.
+
+How many here use IRC? If you are a developer and are not taking advantage of
+Internet Relay chat, you are missing out! Taylor Otwell from the onset of
+Laravel wanted to encourage growth and development in Laravel, it couldn't be
+possible without developers like us. Go on #laravel. There you will find active
+members in the community who are always willing to offer help -many are from
+around the world.
+
+StackOverflow has 6,775 Laravel 4 associated tags listed as of 10:00am this
+morning.
+
+Packagist reports 1.57 Million downloads thus far.
+
+Laracon has a dedicated convention: Laracon 2014 NYC and Laracon 2014 Amsterdam
+
+But that is only the start. Jeffrey Way became a huge supporter of Laravel and
+an overall advocate for the PHP community. One of the biggest contributions has
+been Laracasts. Laracasts is netflix for developers. It features up-to-date and
+concise screencasts on developing software for the web. With hundreds of videos
+to offer, there is a video for every level of experience.
+
+Leanpub offers some cool books:
+So there is a few quality books I bought that I think will improve your Laravel
+development:
+
+Laravel: Code Bright by Dayle Rees.
+Laravel: From Apprentice To Artisan by Taylor Otwell.
+Build APIs You Won't Hate by Phil Sturgeon.
+Laravel Testing Decoded by Jeffrey Way.
+Implementing Laravel by Chris Fidao.
+Laravel 4 Cookbook by Christopher Pitt and Taylor Otwell.
+
+Podcast are amazing on your off time --I like to listen to them while working
+out. Two that relate to Laravel and PHP development as a whole are:
+Laravel.io Podcast featuring the best of the best in Laravel, news, and
+developer's questions!
+PHP Town Hall for a good time in the current events of the PHP
+world.
+
+As you can see, there is a lot to digest. Pick a route and stay active daily on
+Laravel. Only with persistence and hard work can you master the eloquence of
+Laravel.
+
 
 - [ ] Deployment process
 
