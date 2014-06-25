@@ -232,12 +232,6 @@ display it via Blade templating.
 
 class DevelopersController extends \BaseController {
 
-/**
- * Display a listing of the developers
- * GET /developers
- *
- * @return Response
- */
 public function index()
 {
 	$developers = Developer::all();
@@ -248,12 +242,6 @@ public function index()
 Our second controller method will return a form that will allow us to create a
 new developer
 ```php
-/**
- * Show the form for creating a new developer.
- * GET /developers/create
- *
- * @return Response
- */
 public function create()
 {
 	return View::make('developers.create');
@@ -268,20 +256,14 @@ then stores the value as a new entity in the database. We clean our headers and
 redirect back to our developers index page.
 
 ```php
-/**
- * Store a newly created developer in storage
- * POST /developers
- *
- * @return Response
- */
 public function store()
 {
-	$developer = new Developer;
-	$developer->first_name = Input::only("first_name");
-	$developer->last_name = Input::only("last_name");
+	$developer = new developer;
+	$developer->first_name = input::only("first_name");
+	$developer->last_name = input::only("last_name");
 	$developer->save();
 
-	return Redirect::route('developers.index');
+	return redirect::route('developers.index');
 }
 ```
 
@@ -306,13 +288,6 @@ Our fourth controller method will grab an identifier from our URI and use it as
 a parameter to find a developer and then return that specific developer to a
 view.
 ```php
-/**
- * Display the specified developer.
- * GET /developers/{id}
- *
- * @param  int  $id
- * @return Response
- */
 public function show($id)
 {
 	$developer = Developer::findOrFail($id);
@@ -325,13 +300,6 @@ action. In this example, we want to edit a developer with a certain identity.
 REST allows a clean and explicit URI. We find the developer base on that
 identity and display a view with a form to edit out entity.
 ```php
-/**
- * Show the form for editing the developer resource.
- * GET /developers/{id}/edit
- *
- * @param  int  $id
- * @return Response
- */
 public function edit($id)
 {
 	$developer = Developer::findOrFail($id);
