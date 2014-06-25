@@ -97,7 +97,7 @@ WHERE due_date &lt; ":due_date"</code></pre>
 <li>Hard to change DB table prefixes</li>
 <li>Remember to check <code>errorInfo</code> every time</li>
 </ul></article>
-            <article class="slide"><h2>Retrieving records from a database</h2></article>
+            <article class="slide"><h1>Retrieving records from a database</h1></article>
             <article class="slide"><h2>The Laravel way</h2>
 <pre><code class="language-php">class User extends Eloquent
 {
@@ -244,7 +244,7 @@ now we just need to add:
 
 
 </article>
-            <article class="slide"><h2>Autoloading</h2></article>
+            <article class="slide"><h1>Autoloading</h1></article>
             <article class="slide"><h2>The Laravel way</h2>
 <p>Use composer</p></article>
             <article class="slide"><h2>The Composer way</h2>
@@ -286,7 +286,7 @@ foreach (glob("../lib/*.php") as $file) {
 }</code></pre></article>
             <article class="slide"><h1>PUBLIC SERVICE ANNOUNCEMENT</h1></article>
             <article class="slide"><h1>USE COMPOSER</h1></article>
-            <article class="slide"><h2>Basic routing</h2></article>
+            <article class="slide"><h1>Basic routing</h1></article>
             <article class="slide"><h2>The Laravel way</h2>
 <pre><code class="language-php">Route::get('/blog', function() {
     // do blog stuff
@@ -323,7 +323,7 @@ Route::delete("/blog/post/{id}", function ($id) {
     default:
         // show a 404
 }</code></pre></article>
-            <article class="slide"><h2>CSRF tokens</h2></article>
+            <article class="slide"><h1>CSRF tokens</h1></article>
             <article class="slide"><blockquote>
 <p>CSRF is an attack which forces an end user to execute unwanted actions on a web
 application in which he/she is currently authenticated</p>
@@ -432,6 +432,23 @@ if (function_exists($random)) {
 algorithm that he himself can't break.</p>
 <p>&mdash; <cite><a href="https://www.schneier.com/blog/archives/2011/04/schneiers_law.html">Bruce Schneier</a></cite></p>
 </blockquote></article>
+            <article class="slide"><h1>Comparing dates</h1></article>
+            <article class="slide"><h2>The Carbon way</h2>
+<pre><code class="language-php">// Carbon comes included with Laravel
+use Carbon\Carbon;
+
+Carbon::now()-&gt;diffForHumans(
+    Carbon::parse("July 4th, 2014")
+);
+// =&gt; "1 week before"
+
+// other cool things
+Carbon::yesterday();
+Carbon::now()-&gt;isWeekend();
+Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
+            <article class="slide"><h2>The vanilla PHP way</h2>
+<pre><code class="language-php">die("nope.gif");</code></pre>
+<p><img alt="nope.gif" src="./img/nope_jack.gif" /></p></article>
     
             <p class="deck-status" aria-role="status">
                 <span class="deck-status-current"></span>
