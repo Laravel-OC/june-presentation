@@ -8,9 +8,10 @@ function csrf_token()
         session_start();
     }
 
+    // lolwat
     $_SESSION["token"] =
         md5(uniqid(mt_rand(), true)));
 
-    return ($_SESSION["_token"]);
+    return $_SESSION["token"];
 }
 ```
