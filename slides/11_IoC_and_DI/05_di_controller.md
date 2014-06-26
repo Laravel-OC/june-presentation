@@ -1,18 +1,20 @@
 Dependency Injection
 -------------------
-class DevelopersController extends \BaseController {
+```php
+class DevelopersController extends BaseController
+{
+    protected $repo;
 
-	protected $developers;
+    public function __construct(DeveloperRepositoryInterface $repo)
+    {
+        $this->developers = $repo;
+    }
 
-	public function __construct(DeveloperRepositoryInterface $developers)
-	{
-		$this->developers = $developers;
-	}
+    public function index()
+    {
+        $devs = $this->repo->all();
 
-	public function index()
-	{
-		$developers = $this->developers->all();
-		return View::make('developers.index', compact('developers'));
-	}
+        return View::make('developers.index', ["devs" => $devs]);
+    }
 }
-
+```
