@@ -129,11 +129,11 @@ WHERE due_date &lt; ":due_date"</code></pre>
     INNER JOIN projects
         ON developers.id = developer_id
     WHERE due_date &lt; ':due_date'
-    ORDER BY due_date ASC
-    LIMIT :limit
+    ORDER BY due_date ASC LIMIT :limit
 QUERY;
 
-$conn-&gt;prepare($query)-&gt;execute(
+$prep = $conn-&gt;prepare($query);
+$prep-&gt;execute(
     [":due_date" =&gt; $due_date, ":limit" =&gt; $limit]
 );
 
@@ -398,10 +398,11 @@ function csrf_token()
         session_start();
     }
 
+    // lolwat
     $_SESSION["token"] =
         md5(uniqid(mt_rand(), true)));
 
-    return ($_SESSION["_token"]);
+    return $_SESSION["token"];
 }</code></pre></article>
             <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
 <pre><code class="language-php">&lt;input type="hidden"
@@ -418,7 +419,7 @@ function csrf_token()
     $req = count($_POST) ? $_POST : $_GET;
 
     return isset($req["_token"])
-        &amp;&amp; $req["_token"] !== $_SESSION["_token"];
+        &amp;&amp; $req["_token"] !== $_SESSION["token"];
 }</code></pre></article>
             <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
 <pre><code class="language-php">// now just call that in every file you need it
