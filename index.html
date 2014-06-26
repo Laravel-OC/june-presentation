@@ -69,16 +69,10 @@ $connections = [
             <article class="slide"><h2>The Laravel way</h2>
 <pre><code class="language-php">$query = DB::table("developers")
     -&gt;select("*")
-    -&gt;where("projects.due_date", "&lt;", ":due_date")
-    -&gt;whereNull("completed_at")
-    -&gt;orderBy("projects.due_date", "ASC");
-
-// bind any params
-$query-&gt;setBindings(
-    [":due_date" =&gt; "2015-01-01 00:00:00"]
-);
-
-$query-&gt;get();</code></pre></article>
+    -&gt;where("developers.age", "&gt;", 30)
+    -&gt;whereNull("retired_at")
+    -&gt;orderBy("salary", "DESC")
+    -&gt;get();</code></pre></article>
             <article class="slide"><h2>The vanilla PHP way</h2>
 <pre><code class="language-php">$dsn = "{$dbtype}:dbname={$dbname};host={$host}";
 
@@ -89,14 +83,14 @@ $conn = new PDO($dsn, $dbuser, $dbpass);
 <pre><code class="language-php">$query = &lt;&lt;&lt;QUERY
     SELECT *
     FROM developers
-    WHERE due_date &lt; ":due_date"
-    AND WHERE completed_at IS NULL
-    ORDER BY due_date ASC;
+    WHERE age &gt; :age
+    AND WHERE retired_at IS NULL
+    ORDER BY salary DESC
 QUERY;
 
-$conn-&gt;prepare($query)-&gt;execute(
-    [":due_date" =&gt; "2015-01-01 00:00:00"]
-);
+$prep = $conn-&gt;prepare($query);
+
+$prep-&gt;execute([":age" =&gt; 30]);
 
 do_something_with_these_errors($prep-&gt;errorInfo());</code></pre></article>
             <article class="slide"><h2>Problems with the vanilla way</h2>
@@ -315,6 +309,7 @@ require __DIR__ . "/vendor/autoload.php";</code></pre></article>
 
 $cat = new MyNamespace\Model\Cat();
 
+// loaded only when used = lazy loading
 $hat = new MyNamespace\Fashion\Hat();
 
 $cat-&gt;moveInside($hat);</code></pre></article>
@@ -607,7 +602,7 @@ really hard</li>
 <li>Use <code>./artisan migrate:make create_projects_table</code></li>
 <li>Generates all migrations in <code>app/database/migrations</code></li>
 </ul></li>
-<li>Organized by times stamp and migration action
+<li>Organized by timestamp and migration action
 <ul>
 <li>e.g. <code>2014_06_23_073419_create_developers_table.php</code></li>
 </ul></li>
@@ -620,7 +615,7 @@ really hard</li>
         // primary key named 'id'
         $table-&gt;increments('id');
         // a unique string named 'project_name'
-        $table-&gt;string('project_name')-&gt;unique;
+        $table-&gt;string('project_name')-&gt;unique();
         $table-&gt;string('developer_id');
 
         $table-&gt;dateTime('due_date');
@@ -656,22 +651,22 @@ really hard</li>
 <ul>
     <li class="slide">
         <h5>
-           Version control your database
+            Version control your database
         </h5>
     </li>
     <li class="slide">
         <h5>
-           Freedom to add and remove columns while maintaining control
+            Freedom to add and remove columns while maintaining control
         </h5>
     </li>
     <li class="slide">
         <h5>
-           Smooth transition to production environment
+            Smooth transition to production environment
         </h5>
     </li>
     <li class="slide">
         <h5>
-           Portable and transparent
+            Portable and transparent
         </h5>
     </li>
     <li class="slide">
@@ -795,14 +790,14 @@ really hard</li>
             <article class="slide"><h2>Store a newly created developer in storage</h2>
 <pre><code class="language-php">public function store()
 {
-    $dev = new developer;
+    $dev = new Developer;
 
-    $dev-&gt;first_name = input::only("first_name");
-    $dev-&gt;last_name  = input::only("last_name");
+    $dev-&gt;first_name = Input::only("first_name");
+    $dev-&gt;last_name  = Input::only("last_name");
 
     $dev-&gt;save();
 
-    return redirect::route('developers.index');
+    return Redirect::route('developers.index');
 }</code></pre></article>
             <article class="slide"><h2>You may want to take advantage of mass assignment</h2>
 <pre><code class="language-php">public function store()
@@ -815,10 +810,12 @@ really hard</li>
 <pre><code class="language-php">class Developer extends Eloquent
 {
     protected $fillable = ['first_name', 'last_name'];
-}</code></pre></article>
+}</code></pre>
+<h5>Make you still do input validation!</h5></article>
             <article class="slide"><h2>Display the specified developer</h2>
 <pre><code class="language-php">public function show($id)
 {
+    // shows a 404 if it fails
     $dev = Developer::findOrFail($id);
 
     return View::make('developers.show', ['dev' =&gt; $dev]);
@@ -826,6 +823,7 @@ really hard</li>
             <article class="slide"><h2>Show the form for editing a developer</h2>
 <pre><code class="language-php">public function edit($id)
 {
+    // shows a 404 if it fails
     $dev = Developer::findOrFail($id);
 
     return View::make('developers.edit', ["dev" =&gt; $dev]);
@@ -858,9 +856,10 @@ really hard</li>
             <article class="slide"><h2>Remove specified resource from storage</h2>
 <pre><code class="language-php">public function destroy($id)
 {
-    $dev = Developer::findOrFail($id);
-
-    $dev-&gt;delete();
+    // grab the model first
+    Developer::findOrFail($id)-&gt;delete();
+    // OR
+    $affectedRows = Developer::destroy($id);
 
     return Redirect::route('developers.index');
 }</code></pre></article>
@@ -908,10 +907,9 @@ return Redirect::action('DevelopersController@index');</code></pre></article>
     }
 }</code></pre></article>
             <article class="slide"><h2>Register a Login and Logout</h2>
-<pre><code class="language-php">Route::get('login', 'SessionsController@create');
-Route::get('logout', 'SessionsController@destroy');
-
-Route::resource('sessions', 'SessionsController');
+<pre><code class="language-php">Route::get('login', 'AuthController@login');
+Route::post('login', 'AuthController@processLogin');
+Route::get('logout', 'AuthController@logout');
 
 // we don't want just anyone to access this
 Route::get('projects', function() {
@@ -919,25 +917,28 @@ Route::get('projects', function() {
     // so we run the auth filter before showing it to anyone
 })-&gt;before('auth');</code></pre></article>
             <article class="slide"><h2>Authentication Filter</h2>
-<pre><code class="language-php">Route::filter('auth', function() {
+<pre><code class="language-php">// the auth filter
+Route::filter('auth', function() {
     if (Auth::guest()) {
         // sneaky sneaky
         return Redirect::guest('login');
     }
 });</code></pre></article>
             <article class="slide"><h2>Login a user</h2>
-<pre><code class="language-php">public function create()
+<pre><code class="language-php">public function login()
 {
     if (Auth::check()) {
+        // if they're already logged in they shouldn't be here
         return Redirect::to('/projects');
     }
 
     return View::make('developers.login');
 }</code></pre></article>
-            <article class="slide"><pre><code class="language-php">public function store()
+            <article class="slide"><pre><code class="language-php">public function processLogin()
 {
     if (Auth::attempt(Input::only('email', 'password'))) {
-        return "Get to work, " . Auth::user()-&gt;username . "!";
+        return Redirect::to('/projects')
+            -&gt;with('message', 'Successfully logged in');
     }
 
     return Redirect::back()
@@ -945,7 +946,7 @@ Route::get('projects', function() {
         -&gt;withInput();
 }</code></pre></article>
             <article class="slide"><h2>Logout the user</h2>
-<pre><code class="language-php">public function destroy()
+<pre><code class="language-php">public function logout()
 {
     Auth::logout();
 
@@ -1033,7 +1034,7 @@ class DBDeveloperRepository implements DeveloperRepositoryInterface
 
     public function __construct(DeveloperRepositoryInterface $repo)
     {
-        $this-&gt;developers = $repo;
+        $this-&gt;repo = $repo;
     }
 
     public function index()
@@ -1062,19 +1063,19 @@ App::singleton('DeveloperRepositoryInterface', $repo);</code></pre></article>
 <ul>
     <li class="slide">
         <h5>
-          We can change implementation at will without effecting other portions
-          of our application
+            We can change implementation at will without effecting other portions
+            of our application
         </h5>
     </li>
     <li class="slide">
         <h5>
-          Encourages polymorphism: an interface can have multiple
-          implementations.
+            Encourages polymorphism: an interface can have multiple
+            implementations.
         </h5>
     </li>
     <li class="slide">
         <h5>
-          Testable and can be mocked
+            Testable and can be mocked
         </h5>
     </li>
 </ul>
