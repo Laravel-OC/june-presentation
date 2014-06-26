@@ -1,8 +1,5 @@
-Different ways to Redirect
+Different ways to redirect
 --------------------------
-- A redirect is a special type of response object which redirects the flow of
-  the application to another route
-
 ```php
 // Redirect to a route
 return Redirect::to('developer/login');

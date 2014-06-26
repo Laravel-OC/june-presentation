@@ -1,5 +1,5 @@
-You may want to take advantage of Mass Assignment
-------------------------------------------------
+You may want to take advantage of mass assignment
+-------------------------------------------------
 ```php
 public function store()
 {

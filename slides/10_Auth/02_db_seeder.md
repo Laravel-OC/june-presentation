@@ -14,3 +14,4 @@ class DeveloperTableSeeder extends Seeder
         ]);
     }
 }
+```

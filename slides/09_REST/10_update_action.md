@@ -7,13 +7,7 @@ public function update($id)
 
     $dev->fill(Input::all());
 
-    try {
-        $dev->save();
-    } catch (Exception $e) {
-        Log::error($e);
-
-        Redirect::to("developers.error");
-    }
+    $dev->save();
 
     return Redirect::route('developers.show', ['id' => $id]);
 }
