@@ -46,11 +46,18 @@ th {
 
 @media (min-width: 768px) {
     body {
-        font-size: 1em;
+        font-size: 18pt;
     }
 }
-@media (max-width: 767px) {
+
+@media (max-width: 767px) and (min-width: 480px) {
     body {
-        font-size: .5em;
+        font-size: 12pt;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 8pt;
     }
 }
