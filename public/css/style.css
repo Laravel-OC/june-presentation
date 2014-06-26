@@ -43,3 +43,14 @@ table {
 th {
   text-align: left;
 }
+
+@media (min-width: 768px) {
+    body {
+        font-size: 1em;
+    }
+}
+@media (max-width: 767px) {
+    body {
+        font-size: .5em;
+    }
+}
