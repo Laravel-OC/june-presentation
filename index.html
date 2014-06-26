@@ -998,17 +998,19 @@ Dependency injection means giving an object its instance variables. [...].</p>
 <p>&mdash; <cite><a href="http://martinfowler.com/articles/injection.html">Martin Fowler</a></cite></p>
 </blockquote></article>
             <article class="slide"><h2>Problem</h2>
-<pre><code class="language-php">class DevelopersController extends \BaseController {
-
-public function index()
+<pre><code class="language-php">class DevelopersController extends BaseController
 {
-    $developers = Developer::all();
-    return View::make('developers.index', compact('developers'));
+    public function index()
+    {
+        $devs = Developer::all();
+
+        return View::make('developers.index', ["devs" =&gt; $devs]);
+    }
 }</code></pre>
 <ul>
 <li>Concise, but unable to test without hitting the database.</li>
 <li>Eloquent ORM is tightly couple to our controller.</li>
-<li>violates single responsibility.</li>
+<li>Violates single responsibility.</li>
 <li>Think of a monitor and cable line.</li>
 </ul></article>
             <article class="slide"><h2>Inversion of Control Container</h2>
@@ -1025,32 +1027,37 @@ class DBDeveloperRepository implements DeveloperRepositoryInterface
     }
 }</code></pre></article>
             <article class="slide"><h2>Dependency Injection</h2>
-<p>class DevelopersController extends \BaseController {</p>
-<pre><code>protected $developers;
-
-public function __construct(DeveloperRepositoryInterface $developers)
+<pre><code class="language-php">class DevelopersController extends BaseController
 {
-    $this-&gt;developers = $developers;
-}
+    protected $repo;
 
-public function index()
-{
-    $developers = $this-&gt;developers-&gt;all();
-    return View::make('developers.index', compact('developers'));
-}</code></pre>
-<p>}</p></article>
+    public function __construct(DeveloperRepositoryInterface $repo)
+    {
+        $this-&gt;developers = $repo;
+    }
+
+    public function index()
+    {
+        $devs = $this-&gt;repo-&gt;all();
+
+        return View::make('developers.index', ["devs" =&gt; $devs]);
+    }
+}</code></pre></article>
             <article class="slide"><h2>Binding our Dependencies</h2>
-<pre><code class="language-php">App::bind('OC\Repositories\DeveloperRepositoryInterface',
-    'OC\Repositories\DBDeveloperRepository');
+<pre><code class="language-php">App::bind( // bind this interface
+    'DeveloperRepositoryInterface',
+    'DBDeveloperRepository' // to this implementation
+);
 
-// Sometimes you may wish to resolve only one instance of a given class
-// throughout your entire application.
-
-App::singleton('OC\Repositories\DeveloperRepositoryInterface',
-'OC\Repositories\DBDeveloperRepository');
+// Sometimes you may wish to resolve only one instance of a given
+// class throughout your entire application.
+App::singleton( // bind this interface
+    'DeveloperRepositoryInterface',
+    'DBDeveloperRepository' // to the same object
+);
 
 // Or you may wish to pass through an already existing instance
-App::singleton('OC\Repositories\DeveloperRepositoryInterface', $developer);</code></pre></article>
+App::singleton('DeveloperRepositoryInterface', $repo);</code></pre></article>
             <article class="slide"><h2>Benefits</h2>
 <ul>
     <li class="slide">
