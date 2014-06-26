@@ -7,11 +7,11 @@ $query = <<<QUERY
     INNER JOIN projects
         ON developers.id = developer_id
     WHERE due_date < ':due_date'
-    ORDER BY due_date ASC
-    LIMIT :limit
+    ORDER BY due_date ASC LIMIT :limit
 QUERY;
 
-$conn->prepare($query)->execute(
+$prep = $conn->prepare($query);
+$prep->execute(
     [":due_date" => $due_date, ":limit" => $limit]
 );
 
