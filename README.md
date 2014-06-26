@@ -18,12 +18,12 @@ rendered:
 1. The request goes to `showSlides` method on the `SlideController` (in the
    `src` directory)
 
-2. The `SlideController` gets a glob of all `.md` or `.html` files within the
-   `/slides` directory. So `/slides/topic/foo.md` is included but
-   `/slides/bar.md` is not
+2. The `SlideController` gets a glob of all `.md` or `.html` files within
+   subdirectories within the `/slides` directory. So `/slides/topic/foo.md` is
+   included but `/slides/bar.md` is not
 
 3. If the slide is an HTML file, it just gets the contents of it. If the slide
-   is Markdown (.md) file it renders it through Parsedown first
+   is Markdown (`.md`) file it renders it through Parsedown first
 
 4. The slides each get rendered inside an article tag with a class of `.slide`
 
