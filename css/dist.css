@@ -799,7 +799,26 @@ h1 {
   font-size: 2.5em;
 }
 
-#slide-0 h1 strong {
+h1 > strong {
   color: #FA7161
+}
+
+table {
+  width: 100%;
+}
+
+th {
+  text-align: left;
+}
+
+@media (min-width: 768px) {
+    body {
+        font-size: 1em;
+    }
+}
+@media (max-width: 767px) {
+    body {
+        font-size: .5em;
+    }
 }
 

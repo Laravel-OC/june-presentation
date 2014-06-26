@@ -506,69 +506,81 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
     &lt;div class="container"&gt;
         &lt;?= Section::yield("content") ?&gt;
     &lt;/div&gt;
-    &lt;?php if ($projects):
-        echo Section::yield("js");
-    endif; ?&gt;
+    &lt;?php if ($projects): ?&gt;
+        &lt;?= Section::yield("js") ?&gt;
+    &lt;?php endif; ?&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre></article>
             <article class="slide"><h2>The Laravel way (cont'd)</h2>
-<pre><code class="language-php">&lt;?php include __DIR__ . "/../master.php"; ?&gt;
+<pre><code class="language-php">&lt;?php include __DIR__ . "/../master.php";
+// include the master template
 
-&lt;!-- start a new section, content --&gt;
-&lt;?php Section::startSection("content"); ?&gt;
+// start a new section called "content"
+Section::startSection("content"); ?&gt;
 
-    regular php content goes here&lt;br&gt;
+Nothing magic here! Everything gets rendered in
+the master template above. You get access to all
+the things you'd normally have access to. See?
 
-    this will be rendered in the "master" template
+The year is: &lt;?= date("Y") ?&gt;
 
-    the year is &lt;code&gt;&lt;?= date("Y") ?&gt;&lt;/code&gt;
-
-&lt;?php Section::stopSection("content"); ?&gt;</code></pre></article>
+&lt;?php // and just stop the section when you're done
+Section::stopSection("content");</code></pre></article>
             <article class="slide"><h2>The vanilla PHP way</h2>
 <pre><code class="language-php">&lt;html lang='en'&gt;&lt;!-- app/views/master.php --&gt;
 &lt;head&gt;
-    &lt;title&gt;&lt;?php echo $title; ?&gt;&lt;/title&gt;
+    &lt;title&gt;&lt;?= $title ?&gt;&lt;/title&gt;
 &lt;/head&gt;
 &lt;body&gt;
     &lt;div class="container"&gt;
-        &lt;?php echo $content; ?&gt;
+        &lt;?= $content ?&gt;
     &lt;/div&gt;
-    &lt;?php if ($projects):
-        &lt;?php echo $js; ?&gt;
-    endif; ?&gt;
+    &lt;?php if ($projects): ?&gt;
+        &lt;?= $js ?&gt;
+    &lt;?php endif; ?&gt;
 &lt;/body&gt;
 &lt;/html&gt;</code></pre></article>
             <article class="slide"><h2>The vanilla PHP way (cont'd)</h2>
-<pre><code class="language-php">
-&lt;?php /* start output buffering */ ob_start(); ?&gt;
-    regular php content goes here
-    &lt;br&gt;
-    this will be rendered in the "master" template
-    &lt;br&gt;
-    the year is &lt;code&gt;&lt;?= date("Y") ?&gt;&lt;/code&gt;
-&lt;?php $content = ob_get_clean(); ?&gt;
-&lt;?php $title = "My Cool Title"; ?&gt;
-&lt;?php $projects = []; ?&gt;
+<pre><code class="language-php">&lt;?php /* start output buffering */ ob_start(); ?&gt;
+Nothing magic here! Everything gets rendered in
+the master template above. You get access to all
+the things you'd normally have access to. See?
 
-&lt;?php include __DIR__ . "/../master.php"; ?&gt;</code></pre></article>
+The year is: &lt;?= date("Y") ?&gt;
+
+&lt;?php
+
+$content  = ob_get_clean();
+$title    = "My Cool Title";
+$projects = [];
+
+include __DIR__ . "/../master.php";</code></pre></article>
             <article class="slide"><h2>Problems with the vanilla way</h2>
 <ul>
 <li>End up mixing business login and display logic</li>
 <li>View files get very, very busy</li>
 <li>Hard to change variable names</li>
 <li>Multiple sections get unwieldy quickly</li>
+<li>Have to remember to <code>ob_start()</code> at the top of each section
+<ul>
+<li>If you don't you'll get hard-to-debug problems</li>
+</ul></li>
+<li>Doing stuff like conditionally adding a stylesheet to the <code>&lt;head&gt;</code> tag is
+really hard</li>
 </ul></article>
             <article class="slide"><h2>Other benefits Laravel provides</h2>
 <ul>
     <li class="slide">
         <h5>
-            View composers (always include certain variables with certain views)
+            View composers
         </h5>
+        <ul><li>always include certain variables with certain views</li></ul>
     </li>
     <li class="slide">
         <h5>
-            Automatic HTML escaping (XSS protection!)
+            Automatic HTML escaping
         </h5>
+        <ul><li><em>Some</em> XSS protection</li></ul>
     </li>
     <li class="slide">
         <h5>
@@ -585,61 +597,66 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
             <article class="slide"><h1>Migrations</h1></article>
             <article class="slide"><h2>Getting started</h2>
 <ul>
-<li>Setup your default database connection:
+<li>Setup your default database connection just like before</li>
+<li>Install migration table to keep track of migrations
 <ul>
-<li><em>app/config/database.php</em></li>
+<li>Use <code>./artisan migrate:install</code></li>
 </ul></li>
-<li>Install migration table to keep track of migrations:
+<li>Create a migration for a project table
 <ul>
-<li><code>php artisan migrate:install</code></li>
-</ul></li>
-<li>Create a migration for a project table:
-<ul>
-<li><code>php artisan migrate:make create_projects_table</code></li>
-<li>Generates all migrations to <em>app/database/migrations</em></li>
+<li>Use <code>./artisan migrate:make create_projects_table</code></li>
+<li>Generates all migrations in <code>app/database/migrations</code></li>
 </ul></li>
 <li>Organized by times stamp and migration action
 <ul>
-<li><em>2014_06_23_073419_create_developers_table.php</em> </li>
+<li>e.g. <code>2014_06_23_073419_create_developers_table.php</code></li>
 </ul></li>
 </ul></article>
-            <article class="slide"><h2>What goes up...</h2>
+            <article class="slide"><h2>What goes up&hellip;</h2>
 <pre><code class="language-php">public function up()
 {
-    Schema::create('projects', function(Blueprint $table)
-    {
+    // create a "projects" table and apply these features
+    Schema::create('projects', function(Blueprint $table) {
+        // primary key named 'id'
         $table-&gt;increments('id');
+        // a unique string named 'project_name'
         $table-&gt;string('project_name')-&gt;unique;
         $table-&gt;string('developer_id');
+
         $table-&gt;dateTime('due_date');
+        $table-&gt;dateTime('completed_at')-&gt;nullable();
+        // "created_at" and "updated_at" columns
         $table-&gt;timestamps();
     });
 }</code></pre></article>
-            <article class="slide"><h2>...must come down.</h2>
+            <article class="slide"><h2>&hellip;must come down</h2>
 <pre><code class="language-php">public function down()
 {
+    // drop the table
     Schema::drop('projects');
 }</code></pre></article>
             <article class="slide"><h2>More options</h2>
 <ul>
-<li>Rollback the last migration:
+<li>Rollback the last migration
 <ul>
-<li><code>php artisan migrate:migrate</code></li>
+<li>Using <code>./artisan migrate:migrate</code></li>
 </ul></li>
-<li>Reset the entire database --nothing migrated:
+<li>Reset the entire database by rolling everything back
 <ul>
-<li><code>php artisan migrate:reset</code></li>
+<li><code>./artisan migrate:reset</code></li>
 </ul></li>
-<li>Add a due date column to a projects table:
-<ul>
-<li><code>php artisan migrate:make add_due_dates_to_projects_table --table=projects</code></li>
-</ul></li>
+<li>Add a <code>due_date</code> column to a projects table:
+<pre><code class="language-bash">./artisan migrate:make \
+    `# the name of the migration` \
+    add_due_dates_to_projects_table \
+    `# the table to generate a migration for` \
+    --table=projects</code></pre></li>
 </ul></article>
             <article class="slide"><h2>Benefits of Migrations</h2>
 <ul>
     <li class="slide">
         <h5>
-           Version Control your database
+           Version control your database
         </h5>
     </li>
     <li class="slide">
@@ -659,7 +676,7 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
     </li>
     <li class="slide">
         <h5>
-          Automatic database seeding
+            Automatic database seeding
         </h5>
     </li>
 </ul>
@@ -669,17 +686,17 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
 <ul>
     <li class="slide">
         <h5>
-           Clean your URI request into clean and understandable elements
+            Clean your URI request into clean and understandable elements
         </h5>
     </li>
     <li class="slide">
         <h5>
-          Allows you to create, read, update, and delete data 
+            Allows you to create, read, update, and delete data
         </h5>
     </li>
     <li class="slide">
         <h5>
-          CRUD is used within REST to persist the database in response 
+            CRUD is used within REST to persist the database in response
         </h5>
     </li>
 </ul>
@@ -687,104 +704,167 @@ Carbon::now()-&gt;subWeekdays(5);</code></pre></article>
             <article class="slide"><h2>Register a route resource</h2>
 <pre><code class="language-php">Route::resource('developers', 'DevelopersController');</code></pre>
 <ul>
-<li>Wait, what resources? </li>
-</ul></article>
-            <article class="slide"><h2>Display a listing of the developers</h2>
-<pre><code class="language-php">&lt;?php
-
-class DevelopersController extends \BaseController {
-
-public function index()
+<li>Wait, what resources?</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Verb</th>
+<th>Path</th>
+<th>Action</th>
+<th>Route Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td>/resource</td>
+<td>index</td>
+<td>resource.index</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/resource/create</td>
+<td>create</td>
+<td>resource.create</td>
+</tr>
+<tr>
+<td>POST</td>
+<td>/resource</td>
+<td>store</td>
+<td>resource.store</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/resource/{resource}</td>
+<td>show</td>
+<td>resource.show</td>
+</tr>
+<tr>
+<td>GET</td>
+<td>/resource/{resource}/edit</td>
+<td>edit</td>
+<td>resource.edit</td>
+</tr>
+<tr>
+<td>PUT/PATCH</td>
+<td>/resource/{resource}</td>
+<td>update</td>
+<td>resource.update</td>
+</tr>
+<tr>
+<td>DELETE</td>
+<td>/resource/{resource}</td>
+<td>destroy</td>
+<td>resource.destroy</td>
+</tr>
+</tbody>
+</table></article>
+            <article class="slide"><h1>So what does that mean?</h1></article>
+            <article class="slide"><pre><code class="language-php">class DevelopersController
 {
-    $developers = Developer::all();
-    return View::make('developers.index', compact('developers'));
+    // show an index page for this resource
+    public function index();
+    // show a create form for this resource
+    public function create();
+    // store a resource
+    public function store();
+    // show the requested resource
+    public function show($id);
+    // show an edit form for the requested resource
+    public function edit($id);
+    // update the requested resource
+    public function update($id);
+    // delete the requested resource
+    public function destroy($id);
+}</code></pre></article>
+            <article class="slide"><h2>Display a listing of the developers</h2>
+<pre><code class="language-php">public function index()
+{
+    $devs = Developer::all();
+
+    return View::make('developers.index', ["devs" =&gt; $devs]);
 }</code></pre></article>
             <article class="slide"><h2>Show form for creating a new developer</h2>
-<pre><code class="language-php">&lt;?php
-
-class DevelopersController extends \BaseController {
-
-public function index()
+<pre><code class="language-php">public function index()
 {
-    $developers = Developer::all();
-    return View::make('developers.index', compact('developers'));
+    $devs = Developer::all();
+
+    return View::make('developers.index', ["devs" =&gt; $devs]);
 }</code></pre></article>
             <article class="slide"><h2>Store a newly created developer in storage</h2>
 <pre><code class="language-php">public function store()
 {
-    $developer = new developer;
-    $developer-&gt;first_name = input::only("first_name");
-    $developer-&gt;last_name = input::only("last_name");
-    $developer-&gt;save();
+    $dev = new developer;
+
+    $dev-&gt;first_name = input::only("first_name");
+    $dev-&gt;last_name  = input::only("last_name");
+
+    $dev-&gt;save();
 
     return redirect::route('developers.index');
 }</code></pre></article>
-            <article class="slide"><h2>You may want to take advantage of Mass Assignment</h2>
+            <article class="slide"><h2>You may want to take advantage of mass assignment</h2>
 <pre><code class="language-php">public function store()
 {
     Developer::create(Input::all());
+
     return redirect::route('developers.index');
 }</code></pre>
-<p>Guard against MA vulnerability with whitelist</p>
-<pre><code class="language-php">&lt;?php
-
-class Developer extends Eloquent {
+<p>Guard against mass assignment vulnerability with a whitelist</p>
+<pre><code class="language-php">class Developer extends Eloquent
+{
     protected $fillable = ['first_name', 'last_name'];
 }</code></pre></article>
             <article class="slide"><h2>Display the specified developer</h2>
 <pre><code class="language-php">public function show($id)
 {
-    $developer = Developer::findOrFail($id);
-    return View::make('developers.show', compact('developer');
+    $dev = Developer::findOrFail($id);
+
+    return View::make('developers.show', ['dev' =&gt; $dev]);
 }</code></pre></article>
             <article class="slide"><h2>Show the form for editing a developer</h2>
 <pre><code class="language-php">public function edit($id)
 {
-    $developer = Developer::findOrFail($id);
-    return View::make('developers.edit', compact('developer');
+    $dev = Developer::findOrFail($id);
+
+    return View::make('developers.edit', ["dev" =&gt; $dev]);
 }</code></pre></article>
             <article class="slide"><h2>Use form-model binding</h2>
-<ul>
-<li>Bind a model's current instance variables to a form</li>
-<li>List the current values of a model in input tags
-<pre><code class="language-php">@section('content')
-{{ Form::model($developer, ['method' =&gt; 'PATCH', 'route' =&gt;
-['developers.update', $developer-&gt;id]]) }}
+<pre><code class="language-php">&lt;?= Form::model($dev,
+    ["method" =&gt; "PATCH", "route" =&gt; "developers.update", $dev-&gt;id]
+) ?&gt;
     &lt;div&gt;
-        {{ Form::label('first_name', 'First Name:') }}
-        {{ Form::text('first_name') }}
+        &lt;?= Form::label('first_name', 'First Name:') ?&gt;
+        &lt;?= Form::text('first_name') ?&gt;
     &lt;/div&gt;
     &lt;div&gt;
-        {{ Form::label('last_name', 'Last Name:') }}
-        {{ Form::text('last_name') }}
+        &lt;?= Form::label('last_name', 'Last Name:') ?&gt;
+        &lt;?= Form::text('last_name') ?&gt;
     &lt;/div&gt;
-    &lt;div&gt;
-        {{ Form::submit('Update Developer') }}
-    &lt;/div&gt;
-@stop</code></pre></li>
-</ul></article>
+    &lt;div&gt;&lt;?= Form::submit('Update Developer') ?&gt;&lt;/div&gt;
+&lt;?= Form::close() ?&gt;</code></pre></article>
             <article class="slide"><h2>Update the specified resource in storage</h2>
 <pre><code class="language-php">public function update($id)
 {
-    $developer = Developer::findOrFail($id);
-    $developer-&gt;fill(Input::all());
-    $developer-&gt;save();
+    $dev = Developer::findOrFail($id);
 
-        return Redirect::route('developers.show', ['id' =&gt; $id]);
-    }</code></pre></article>
+    $dev-&gt;fill(Input::all());
+
+    $dev-&gt;save();
+
+    return Redirect::route('developers.show', ['id' =&gt; $id]);
+}</code></pre></article>
             <article class="slide"><h2>Remove specified resource from storage</h2>
 <pre><code class="language-php">public function destroy($id)
 {
-    $developer = Developer::findOrFail($id);
-    $developer-&gt;delete();
+    $dev = Developer::findOrFail($id);
+
+    $dev-&gt;delete();
 
     return Redirect::route('developers.index');
-    }</code></pre></article>
-            <article class="slide"><h2>Different ways to Redirect</h2>
-<ul>
-<li>A redirect is a special type of response object which redirects the flow of
-the application to another route</li>
-</ul>
+}</code></pre></article>
+            <article class="slide"><h2>Different ways to redirect</h2>
 <pre><code class="language-php">// Redirect to a route
 return Redirect::to('developer/login');
 
@@ -793,6 +873,239 @@ return Redirect::to('login');
 
 // Redirect to a Controller action
 return Redirect::action('DevelopersController@index');</code></pre></article>
+            <article class="slide"><h1>Authentication</h1></article>
+            <article class="slide"><h2>Authentication and Laravel</h2>
+<ul>
+    <li class="slide">
+        <h5>
+            Authentication is essential in many modern apps
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+            The Auth facade makes authentication and session management easy
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+            Treated like a natural citizen in your app
+        </h5>
+    </li>
+</ul>
+</article>
+            <article class="slide"><h2>Database Seeder</h2>
+<pre><code class="language-php">class DeveloperTableSeeder extends Seeder
+{
+    public function run()
+    {
+        Developer::truncate();
+
+        Developer::create([
+            'email'      =&gt; 'ciaran@ciarandowney.com',
+            'username'   =&gt; 'ciarand',
+            'password'   =&gt; Hash::make('1234'),
+        ]);
+    }
+}</code></pre></article>
+            <article class="slide"><h2>Register a Login and Logout</h2>
+<pre><code class="language-php">Route::get('login', 'SessionsController@create');
+Route::get('logout', 'SessionsController@destroy');
+
+Route::resource('sessions', 'SessionsController');
+
+// we don't want just anyone to access this
+Route::get('projects', function() {
+    return 'List of Super Secret Projects';
+    // so we run the auth filter before showing it to anyone
+})-&gt;before('auth');</code></pre></article>
+            <article class="slide"><h2>Authentication Filter</h2>
+<pre><code class="language-php">Route::filter('auth', function() {
+    if (Auth::guest()) {
+        // sneaky sneaky
+        return Redirect::guest('login');
+    }
+});</code></pre></article>
+            <article class="slide"><h2>Login a user</h2>
+<pre><code class="language-php">public function create()
+{
+    if (Auth::check()) {
+        return Redirect::to('/projects');
+    }
+
+    return View::make('developers.login');
+}</code></pre></article>
+            <article class="slide"><pre><code class="language-php">public function store()
+{
+    if (Auth::attempt(Input::only('email', 'password'))) {
+        return "Get to work, " . Auth::user()-&gt;username . "!";
+    }
+
+    return Redirect::back()
+        -&gt;with('message', 'Invalid credentials')
+        -&gt;withInput();
+}</code></pre></article>
+            <article class="slide"><h2>Logout the user</h2>
+<pre><code class="language-php">public function destroy()
+{
+    Auth::logout();
+
+    return Redirect::home()-&gt;with('message', 'Logged out');
+}</code></pre></article>
+            <article class="slide"><h2>Authentication Facade</h2>
+<ul>
+    <li class="slide">
+        <h5>
+            Auth offers an easy an natural way to authenticate the user
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+            You don't have to concern yourself with writing an authentication
+            module
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+            Authentication module uses the most up-to-date current hashing
+            practices
+        </h5>
+    </li>
+</ul>
+</article>
+            <article class="slide"><h1>The IoC Container and Dependency Injection</h1></article>
+            <article class="slide"><h2>Inversion of Control</h2>
+<ul>
+    <li class="slide">
+        <h5>
+            A powerful tool for managing class dependencies.
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+            Defines how our application should implement a class or interface.
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+            Simply a convenience mechanism for achieving dependency injection
+        </h5>
+    </li>
+</ul>
+</article>
+            <article class="slide"><blockquote>
+<p>Dependency Injection" is a 25-dollar term for a 5-cent concept. [...]
+Dependency injection means giving an object its instance variables. [...].</p>
+<p>&mdash; <cite><a href="http://martinfowler.com/articles/injection.html">Martin Fowler</a></cite></p>
+</blockquote></article>
+            <article class="slide"><h2>Problem</h2>
+<pre><code class="language-php">class DevelopersController extends \BaseController {
+
+public function index()
+{
+    $developers = Developer::all();
+    return View::make('developers.index', compact('developers'));
+}</code></pre>
+<ul>
+<li>Concise, but unable to test without hitting the database.</li>
+<li>Eloquent ORM is tightly couple to our controller.</li>
+<li>violates single responsibility.</li>
+<li>Think of a monitor and cable line.</li>
+</ul></article>
+            <article class="slide"><h2>Inversion of Control Container</h2>
+<pre><code class="language-php">interface DeveloperRepositoryInterface
+{
+    public function all();
+}
+
+class DBDeveloperRepository implements DeveloperRepositoryInterface
+{
+    protected function all()
+    {
+        return Developer::all();
+    }
+}</code></pre></article>
+            <article class="slide"><h2>Dependency Injection</h2>
+<p>class DevelopersController extends \BaseController {</p>
+<pre><code>protected $developers;
+
+public function __construct(DeveloperRepositoryInterface $developers)
+{
+    $this-&gt;developers = $developers;
+}
+
+public function index()
+{
+    $developers = $this-&gt;developers-&gt;all();
+    return View::make('developers.index', compact('developers'));
+}</code></pre>
+<p>}</p></article>
+            <article class="slide"><h2>Binding our Dependencies</h2>
+<pre><code class="language-php">App::bind('OC\Repositories\DeveloperRepositoryInterface',
+    'OC\Repositories\DBDeveloperRepository');
+
+// Sometimes you may wish to resolve only one instance of a given class
+// throughout your entire application.
+
+App::singleton('OC\Repositories\DeveloperRepositoryInterface',
+'OC\Repositories\DBDeveloperRepository');
+
+// Or you may wish to pass through an already existing instance
+App::singleton('OC\Repositories\DeveloperRepositoryInterface', $developer);</code></pre></article>
+            <article class="slide"><h2>Benefits</h2>
+<ul>
+    <li class="slide">
+        <h5>
+          We can change implementation at will without effecting other portions
+          of our application
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+          Encourages polymorphism: an interface can have multiple
+          implementations.
+        </h5>
+    </li>
+    <li class="slide">
+        <h5>
+          Testable and can be mocked
+        </h5>
+    </li>
+</ul>
+</article>
+            <article class="slide"><h1>Interested in learning more?</h1></article>
+            <article class="slide"><h1>Have some links!</h1></article>
+            <article class="slide"><h2>The official documentation</h2>
+<ul>
+<li><a href="http://laravel.com/docs">Laravel docs</a></li>
+<li><a href="http://laravel.io/forum">Laravel forums</a></li>
+<li><a href="https://github.com/laravel/laravel">Laravel GitHub</a></li>
+<li><a href="https://leanpub.com/laravel">Laravel book</a></li>
+</ul></article>
+            <article class="slide"><h2>Laracasts (semi-official)</h2>
+<ul>
+<li><a href="https://laracasts.com/">Homepage</a></li>
+<li><a href="https://laracasts.com/lessons/you-must-use-composer">"You Must Use Composer"</a></li>
+<li><a href="https://laracasts.com/lessons/laravel-installation-for-newbs">"Laravel Installation For Newbs"</a></li>
+<li><a href="https://laracasts.com/lessons/namespacing-primer">"Namespace Primer"</a></li>
+</ul></article>
+            <article class="slide"><h2>Code Bright (by Dayle Rees)</h2>
+<ul>
+<li>Written by one of the most prominent members of the community</li>
+<li>Written for beginners to Laravel and frameworks</li>
+<li>Conversational style makes it a really easy read</li>
+<li><a href="http://daylerees.com/codebright">Samples</a> available!</li>
+<li><a href="https://leanpub.com/codebright">Available for purchase on LeanPub for $29.99</a></li>
+</ul></article>
+            <article class="slide"><h1>Wait, you're going too fast!</h1></article>
+            <article class="slide"><h1>Don't worry!</h1></article>
+            <article class="slide"><h1>We're on GitHub!</h1></article>
+            <article class="slide"><h2>Links</h2>
+<ul>
+<li>This presentation: <a href="http://laravel-oc.github.io/june-presentation">laravel-oc.github.io/june-presentation</a></li>
+<li>This presentation source code: <a href="http://github.com/Laravel-OC/june-presentation">github.com/Laravel-OC/june-presentation</a></li>
+<li>Justin on GitHub: <a href="http://github.com/KLVTZ">github.com/KLVTZ</a></li>
+<li>Ciaran on GitHub: <a href="http://github.com/ciarand">github.com/ciarand</a></li>
+</ul></article>
     
             <p class="deck-status" aria-role="status">
                 <span class="deck-status-current"></span>
