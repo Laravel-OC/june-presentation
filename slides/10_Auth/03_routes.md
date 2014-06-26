@@ -1,10 +1,9 @@
 Register a Login and Logout
 ---------------------------
 ```php
-Route::get('login', 'SessionsController@create');
-Route::get('logout', 'SessionsController@destroy');
-
-Route::resource('sessions', 'SessionsController');
+Route::get('login', 'AuthController@login');
+Route::post('login', 'AuthController@processLogin');
+Route::get('logout', 'AuthController@logout');
 
 // we don't want just anyone to access this
 Route::get('projects', function() {

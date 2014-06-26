@@ -1,7 +1,7 @@
 Logout the user
 ---------------
 ```php
-public function destroy()
+public function logout()
 {
     Auth::logout();
 

@@ -6,6 +6,7 @@ The Composer way (cont'd)
 
 $cat = new MyNamespace\Model\Cat();
 
+// loaded only when used = lazy loading
 $hat = new MyNamespace\Fashion\Hat();
 
 $cat->moveInside($hat);

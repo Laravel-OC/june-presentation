@@ -17,3 +17,5 @@ class Developer extends Eloquent
     protected $fillable = ['first_name', 'last_name'];
 }
 ```
+
+##### Make you still do input validation!

@@ -3,9 +3,10 @@ Remove specified resource from storage
 ```php
 public function destroy($id)
 {
-    $dev = Developer::findOrFail($id);
-
-    $dev->delete();
+    // grab the model first
+    Developer::findOrFail($id)->delete();
+    // OR
+    $affectedRows = Developer::destroy($id);
 
     return Redirect::route('developers.index');
 }

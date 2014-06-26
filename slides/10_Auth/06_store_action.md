@@ -1,8 +1,9 @@
 ```php
-public function store()
+public function processLogin()
 {
     if (Auth::attempt(Input::only('email', 'password'))) {
-        return "Get to work, " . Auth::user()->username . "!";
+        return Redirect::to('/projects')
+            ->with('message', 'Successfully logged in');
     }
 
     return Redirect::back()

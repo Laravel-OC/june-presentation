@@ -8,7 +8,7 @@ public function up()
         // primary key named 'id'
         $table->increments('id');
         // a unique string named 'project_name'
-        $table->string('project_name')->unique;
+        $table->string('project_name')->unique();
         $table->string('developer_id');
 
         $table->dateTime('due_date');

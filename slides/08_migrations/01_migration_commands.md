@@ -6,5 +6,5 @@ Getting started
 - Create a migration for a project table
   - Use `./artisan migrate:make create_projects_table`
   - Generates all migrations in `app/database/migrations`
-- Organized by times stamp and migration action
+- Organized by timestamp and migration action
   - e.g. `2014_06_23_073419_create_developers_table.php`

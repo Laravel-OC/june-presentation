@@ -4,14 +4,14 @@ The vanilla PHP way
 $query = <<<QUERY
     SELECT *
     FROM developers
-    WHERE due_date < ":due_date"
-    AND WHERE completed_at IS NULL
-    ORDER BY due_date ASC;
+    WHERE age > :age
+    AND WHERE retired_at IS NULL
+    ORDER BY salary DESC
 QUERY;
 
-$conn->prepare($query)->execute(
-    [":due_date" => "2015-01-01 00:00:00"]
-);
+$prep = $conn->prepare($query);
+
+$prep->execute([":age" => 30]);
 
 do_something_with_these_errors($prep->errorInfo());
 ```

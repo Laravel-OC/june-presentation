@@ -7,7 +7,7 @@ class DevelopersController extends BaseController
 
     public function __construct(DeveloperRepositoryInterface $repo)
     {
-        $this->developers = $repo;
+        $this->repo = $repo;
     }
 
     public function index()
